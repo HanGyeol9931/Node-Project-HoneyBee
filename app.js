@@ -31,22 +31,34 @@ sequelize
 app.post("/create",(req,res)=>{
     // create이 함수를 사용하면 해당 테이블에 컬럼을 추가할 수 있다.
     const { nickName, userPassword, userId }  = req.body;
-    const create = User.create({  
-        nickName : nickName,
-        userPassword : userPassword,
-        userId : userId,
-        userStop : 0,
-        userWarning : 0,
-        authority : "일반",
-        // 위의 객체를 전달해서 컬럼을 추가할수있다.
-    }).then((e)=>{ // 회원가입 성공 시
-        res.send('<script>alert("회원가입을 축하합니다!"); document.location.href="/";</script>');
-    })
-    .catch((err)=>{ // 회원 가입 실패 시 
-        res.send(err);
-    });
+    if((nickName && userPassword) == ""){ 
+        res.send('<script type="text/javascript">alert("아이디와 비밀번호를 입력해주세요."); window.location.href="/";</script>');
+    }else{
+        const create = User.create({  
+            nickName : nickName,
+            userPassword : userPassword,
+            userId : userId,
+            userStop : 0,
+            userWarning : 0,
+            authority : "일반",
+            // 위의 객체를 전달해서 컬럼을 추가할수있다.
+        }).then((e)=>{ // 회원가입 성공 시
+            res.send('<script>alert("회원가입을 축하합니다!"); document.location.href="/";</script>');
+        }).catch((err)=>{ // 회원 가입 실패 시 
+            res.send(err);
+        });
+    }
 });
-
+    // .catch(()=>{
+    //     if((nickName && userPassword)==""){ 
+    //         res.send('<script type="text/javascript">alert("아이디와 비밀번호를 입력해주세요."); window.location.href="/";</script>');
+    //     } else{
+    //         res.send('<script>alert("회원가입을 축하합니다!"); document.location.href="/";</script>');
+    //     }
+    // }).then((e)=>{ // 회원가입 성공 시
+    //     res.send('<script>alert("회원가입을 축하합니다!"); document.location.href="/";</script>');
+    // })
+   
 app.get("/", (req,res)=>{  // 현재까지 메인인 log.html
     res.render("index");
 });
