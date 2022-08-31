@@ -3,7 +3,6 @@ const bodyParser = require('body-parser');
 const ejs = require("ejs");
 const path = require("path");
 const bcrypt = require('bcrypt');
-const cookie = require('cookie-parser');
 const mysql = require("mysql2");
 const img = require('./js/upload');
 const cookie = require("cookie-parser")
@@ -66,15 +65,7 @@ app.post("/create",(req,res)=>{
         })
     }
 });
-    // .catch(()=>{
-    //     if((nickName && userPassword)==""){ 
-    //         res.send('<script type="text/javascript">alert("아이디와 비밀번호를 입력해주세요."); window.location.href="/";</script>');
-    //     } else{
-    //         res.send('<script>alert("회원가입을 축하합니다!"); document.location.href="/";</script>');
-    //     }
-    // }).then((e)=>{ // 회원가입 성공 시
-    //     res.send('<script>alert("회원가입을 축하합니다!"); document.location.href="/";</script>');
-    // })
+   
    
 app.get("/", (req,res)=>{  // 현재까지 메인인 log.html
     res.render("index");
@@ -86,20 +77,23 @@ app.post('/index',(req,res)=>{
     const userpw = req.body.userPassword;
     User.findOne({
         raw : true,
-        where : {userId:userid,userPassword:userpw},
+        where : {userId:userid}
     }).then((e)=>{ // findOne을해서 담은 정보를 e에 넣음
-        if(e === null){ // 유저아이디와 패스워드가 일치한 값이 없다면
-            res.send('<script type="text/javascript">alert("로그인 정보가 일치하지 않습니다."); window.location.href="/";</script>');
-        }
-        else if((userid && userpw) == ""){ // 유저아이디와 패스워드가 공란이라면 
-            res.send('<script type="text/javascript">alert("아이디와 비밀번호를 입력해주세요."); window.location.href="/";</script>');
-        }else{
-            res.cookie("user",userid,{ // 로그인시 id로 쿠키만들기
-            expires : new Date(Date.now() + 900000),
-            httpOnly : true
-            });
-            res.render('myPage',{data : e});        
-        }
+        const hashPassword = e.userPassword;
+        bcrypt.compare(userpw, hashPassword, (err, same) => {
+            if(same){
+                res.cookie("user",userid,{ // 로그인시 id로 쿠키만들기
+                expires : new Date(Date.now() + 900000),
+                httpOnly : true
+                });
+                res.render('myPage',{data : e});  
+            }else if((userid && userpw) == ""){ // 유저아이디와 패스워드가 공란이라면 
+                res.send('<script type="text/javascript">alert("아이디와 비밀번호를 입력해주세요."); window.location.href="/";</script>');
+            }
+            else{
+                res.send('<script type="text/javascript">alert("로그인 정보가 일치하지 않습니다."); window.location.href="/";</script>');
+            }
+        })
     });
 });
 //------------------------------------로그아웃-----------------------------------------------------
