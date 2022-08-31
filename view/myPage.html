@@ -5,179 +5,178 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- 리셋 css -->
-    <link rel="stylesheet" href="../css/reset.css"/>
+    <!-- <link rel="stylesheet" href="../css/reset.css"/> -->
     <!-- 헤더 css -->
-    <link rel="stylesheet" href="../css/header.css"/>
-    <link rel="stylesheet" href="../css/myPage.css"/>
-    <link rel="stylesheet" href="../css/footer.css"/>
+    <!-- <link rel="stylesheet" href="../css/header.css"/> -->
+    <!-- <link rel="stylesheet" href="../css/myPage.css"/> -->
+    <!-- <link rel="stylesheet" href="../css/footer.css"/> -->
     <!-- jquery -->
     <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
     <title>프로필 수정</title>
+    <style>
+        @font-face {
+            font-family: 'DungGeunMo';
+            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/DungGeunMo.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+            
+        }
+        body{
+            font-size: 1.5em;
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            color: white;
+            font-family: 'DungGeunMo';
+        }
+        .filebox label {
+            display: inline-block;
+            padding: .5em .75em;
+            font-size: inherit;
+            line-height: normal;
+            vertical-align: middle;
+            background-color: blue;
+            cursor: pointer;
+            /* border: 1px solid #ebebeb; */
+            border-bottom-color: #e2e2e2;
+            /* border-radius: .25em; */
+        }
+        .filebox label:hover{
+            background-color: white;
+            color: blue;
+        }
+
+        .filebox input[type="file"] {  
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip:rect(0,0,0,0);
+            border: 0;
+        }
+        .content{
+            position: relative;
+            top: 1.5vw;
+        }
+        .main{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid white;
+            background-color: blue;
+            width:20vh;
+            height:50vh;
+            max-width: 1000px;
+            max-height: 600px;
+            word-break: break-all;
+            min-width: 300px;
+            min-height: 300px;
+            position: absolute;
+            /* 무족건 무슨일이 있어도 정중앙 */
+            top: 50%;
+            left:50%;
+            transform: translate(-50%,-50%);
+        }
+        .profile{
+            text-align: center;
+            position: relative;
+            bottom: 13vh;
+            font-size: 2.6vh;
+        }
+        .profilePicture{
+            display: flex;
+            align-items: center;
+            position: relative;
+            bottom: 5vh;
+            font-size: 2vh;
+        }
+        .profilePictureText{
+            margin-right: 2vh;
+        }
+        .filebox{
+            display: flex;
+            align-items: center;
+        }
+        .filebox > label{
+            margin-left: 1vh;
+        }
+        .profileName{
+            font-size: 2vh;
+        }
+        .profileName > input{
+            width: 13vw;
+            min-width: 150px;
+            padding: 0.5em;
+            font-size: 1vh;
+        }
+        .profileBtn{
+            position: relative;
+            top: 5vh;
+            text-align: center;
+        }
+        .profileBtn > button{
+            padding: 1vw;
+            margin-right: 2vh;
+            font-family: 'DungGeunMo';
+            font-size: 1.5vh;
+            color: white;
+            border: 0;
+            background-color: blue;
+        }
+        .profileBtn > button:hover{
+            color: blue;
+            background-color: white;
+        }
+        img{
+            width: 10vh;
+            height: 10vh;
+            border: 3px solid white;
+        }
+    </style>
 </head>
 <body>
-    <div id="headerwrap">
-        <div id="header">
-            <a href="/main.html"><img src="../logo/logo.png" height="70px"></a>
-            <div id="nav">
-                <div class="dropdown">
-                    <button class="ddBtn">꿀단지</button>
-                    <div class="dropdown-content">
-                        <a href="../html/ten.html">10대 꿀단지</a>
-                        <a href="../html/twenty.html">20대 꿀단지</a>
-                        <a href="../html/thirty.html">30대 꿀단지</a>
-                    </div>
-                </div>
-                <div class="dropdown">
-                    <button class="ddBtn">게임단지</button>
-                    <div class="dropdown-content">
-                        <a href="../html/game.html">꿀벌게임</a>
-                        <a href="../html/roulette.html">룰렛게임</a>
-                        <a href="#">(준비중)</a>
-                    </div>
-                </div>
-                <div class="dropdown">
-                    <button class="ddBtn">알림단지</button>
-                    <div class="dropdown-content">
-                        <a href="../html/calendar.html">정보 캘린더</a>
-                        <a href="../html/event.html">행사 안내</a>
-                    </div>
-                </div>
-                <div class="dropdown">
-                    <button class="ddBtn">문의하기</button>
-                    <div class="dropdown-content">
-                        <a href="../html/qna.html">자주하는 질문</a>
-                    </div>
-                </div>
+    <div class="main">
+        <div class="content">
+            <div class="profile"><%=data.nickName%> 님의 마이 페이지</div>
+            <div class="profilePicture">
+                <span class="profilePictureText">프로필 사진 : </span> 
+                <span class="filebox">
+                    <img id="preview-image" src="<%= data.profilePicture %>" width="100" height="100" >
+                    <input style="display: inline-block;" type="file" id="input-image">
+                    <input type="file" accept="image/*" id="input-image" name="profilePicture" value="" >
+                    <label for="input-image">사진변경</label>
+                    <label class="preview-de">삭제</label> 
+                </span>
             </div>
-                <div class="userIcon">
-                    <img src="../icon/main_menu.png">
-                    <ul class="dropdown-content">
-                        <a href="../loghtml/log.html">로그인</a>
-                        <a href="../loghtml/membership.html">회원가입</a>
-                        <a href="../loghtml/myPage.html">마이페이지</a>
-                    </ul>
-                </div>
+            <div class="profileName">닉네임 수정 : <input id="nickname" value="<%= data.nickName %>" name="nickname"></div>
+            <div class="profileBtn">
+                <button id="upload" type="button">적 용</button>
+                <button>취 소</button>
+                <button id="logout" type="button">돌 아 가 기</button>
             </div>
-        </div>
-        <!-- underheader -->
-        <div id = "underheader">
-          <div class = "under">
-            <ul style="padding-top: 20px; padding-left: 23%;">
-                <li style="display: inline-block;"><a href="#">&nbsp&nbsp내프로필&nbsp&nbsp</a></li>
-                <li style="display: inline-block;"><a href="#">&nbsp&nbsp</a></li>
-                <li style="display: inline-block;"><a href="#"></a></li>
-            </ul>
-          </div>
-        </div>
-    </br>
-    </br>
-    </br>
-    </br>
-        <!-- idcontent -->
-        <div id = "idcontent">
-            <div id = "textbox">
-                <h1>프로필 수정</h1>
-            </br>
-            </br>
-                <p>꿀단지 대표 프로필과 별명을 수정할실 수 있습니다.</p>
-            </div>
-        </br>
-        </br>
-        </br>
-        <form action="/myPage" method="post">
-            <table border="1" width="1000">
-                <tbody>
-                    <tr height="200">
-                        <td width="200" bgcolor="#f9f9f9">
-                            <div id ="tdcell">
-                                프로필사진
-                            </div>
-                        </td>
-                        <td width="700" >
-                            <div id ="tdcell">
-                                <div class="image-container">
-                                  <span class="filebox">
-                                    <!--  -->
-                                    <img id="preview-image" src="<%= data.profilePicture %>" width="100" height="100" >
-                                    <input style="display: block;" type="file" id="input-image"  ></br></br>
-                                    <input type="file" accept="image/*" id="input-image" name="profilePicture" value="" >
-                                    <div class="file-edit-icon">
-                                        <label for="input-image">사진변경</label>
-                                        <label class="preview-de">삭제</label> 
-                                    </div>
-                                  </span>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr height="80">
-                        <td bgcolor="#f9f9f9">별명</td>
-                        
-                        <td><input id="nickname" value="<%= data.nickName %>" name="nickname"></td>
-                        
-                    </tr>
-                </tbody>
-            </table>
-
-            <div class="btn_wrap">
-                <a href>
-                    <button id="upload" type="button">적 용</button>
-                </a>
-
-                <a href>
-                    <button>취 소</button>
-                </a>
-                <a href>
-                    <button id="logout" type="button">로 그 아 웃</button>
-                </a>
-            </div>
-        </form>
-        </div>
-    
-    <!--footer-->
-    <div id="footerwrap">
-        <div id="footer">
-            <div class="footer_col">
-                <ul class="col_content">
-                    <li>Creators</li>
-                    <li><a href="#">크리에이터</a></li>
-                    <li><a href="#">스몰비즈니스</a></li>
-                </ul>
-                <ul class="col_content">
-                    <li>Partners</li>
-                    <li><a href="#">비즈니스 광고</a></li>
-                    <li><a href="#">스토어 개설</a></li>
-                    <li><a href="#">지역업체 등록</a></li>
-                </ul>
-                <ul class="col_content">
-                    <li>Developers</li>
-                    <li><a href="#">꿀단지 개발자센터</a></li>
-                    <li><a href="#">오픈API</a></li>
-                    <li><a href="#">오픈소스</a></li>
-                    <li><a href="#">꿀단지 D2</a></li>
-                    <li><a href="#">꿀단지 D2SF</a></li>
-                    <li><a href="#">꿀단지 랩스</a></li>
-                </ul>
-            </div>
-            <div class="footer_row">
-                
-                <ul class="row_content">
-                    <li><a href="#">회사소개</a></li>
-                    <li><a href="#">인재채용</a></li>
-                    <li><a href="#">제휴제안</a></li>
-                    <li><a href="#">이용약관</a></li>
-                    <li><a href="#">개인정보처리방침</a></li>
-                    <li><a href="#">청소년보호정책</a></li>
-                    <li><a href="#">꿀단지 정책</a></li>
-                    <li><a href="#">고객센터</a></li>
-                </ul>
-            </div>
-            <p class="copyright">&copy; 꿀단지 Corp.</p>
-
         </div>
     </div>
+    
 </body>
 <script>
+    if(window.innerWidth <= 850){
+        document.querySelector(".main").style.width = "100%"
+        document.querySelector(".main").style.maxWidth = "100%"
+        document.querySelector(".main").style.height = "100%"
+        document.querySelector(".main").style.maxHeight = "100vh"
+        document.querySelector(".main").style.border = "0"
+        // document.querySelectorAll(".userUI")[1].style.fontSize = "3vw"
+    }
+    else{
+        document.querySelector(".main").style.width = "50vw"
+        document.querySelector(".main").style.maxWidth = "1000px"
+        document.querySelector(".main").style.height = "50vw"
+        document.querySelector(".main").style.maxHeight = "600px"
+        document.querySelector(".main").style.border = "3px solid"
+        // document.querySelectorAll(".userUI")[1].style.fontSize = "1em"
+    }
     const previewImage = document.getElementById("preview-image");
     let count = false;
     let nick = nickname.value;
@@ -258,18 +257,10 @@
     // 로그아웃 버튼 쿠키 로그아웃 
     logout.onclick = function(e){
         e.preventDefault();
-        userLogout();
+        location.href = "/index"
+        
     };
-    function userLogout(){
-        $.ajax({
-            url : '/logout',
-            type : 'get',
-            success : function(){
-                alert('로그아웃 되었습니다');
-                location.href="/";
-            }
-        })
-    }
+    
 </script>
 </html>
 
