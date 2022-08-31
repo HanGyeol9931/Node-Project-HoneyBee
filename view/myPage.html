@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 리셋 css -->
+    <link rel="stylesheet" href="../css/reset.css"/>
+    <!-- 헤더 css -->
+    <link rel="stylesheet" href="../css/header.css"/>
+    <link rel="stylesheet" href="../css/myPage.css"/>
+    <link rel="stylesheet" href="../css/footer.css"/>
+    <!-- jquery -->
+    <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <title>프로필 수정</title>
+</head>
+<body>
+    <div id="headerwrap">
+        <div id="header">
+            <a href="/main.html"><img src="../logo/logo.png" height="70px"></a>
+            <div id="nav">
+                <div class="dropdown">
+                    <button class="ddBtn">꿀단지</button>
+                    <div class="dropdown-content">
+                        <a href="../html/ten.html">10대 꿀단지</a>
+                        <a href="../html/twenty.html">20대 꿀단지</a>
+                        <a href="../html/thirty.html">30대 꿀단지</a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <button class="ddBtn">게임단지</button>
+                    <div class="dropdown-content">
+                        <a href="../html/game.html">꿀벌게임</a>
+                        <a href="../html/roulette.html">룰렛게임</a>
+                        <a href="#">(준비중)</a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <button class="ddBtn">알림단지</button>
+                    <div class="dropdown-content">
+                        <a href="../html/calendar.html">정보 캘린더</a>
+                        <a href="../html/event.html">행사 안내</a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <button class="ddBtn">문의하기</button>
+                    <div class="dropdown-content">
+                        <a href="../html/qna.html">자주하는 질문</a>
+                    </div>
+                </div>
+            </div>
+                <div class="userIcon">
+                    <img src="../icon/main_menu.png">
+                    <ul class="dropdown-content">
+                        <a href="../loghtml/log.html">로그인</a>
+                        <a href="../loghtml/membership.html">회원가입</a>
+                        <a href="../loghtml/myPage.html">마이페이지</a>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- underheader -->
+        <div id = "underheader">
+          <div class = "under">
+            <ul style="padding-top: 20px; padding-left: 23%;">
+                <li style="display: inline-block;"><a href="#">&nbsp&nbsp내프로필&nbsp&nbsp</a></li>
+                <li style="display: inline-block;"><a href="#">&nbsp&nbsp</a></li>
+                <li style="display: inline-block;"><a href="#"></a></li>
+            </ul>
+          </div>
+        </div>
+    </br>
+    </br>
+    </br>
+    </br>
+        <!-- idcontent -->
+        <div id = "idcontent">
+            <div id = "textbox">
+                <h1>프로필 수정</h1>
+            </br>
+            </br>
+                <p>꿀단지 대표 프로필과 별명을 수정할실 수 있습니다.</p>
+            </div>
+        </br>
+        </br>
+        </br>
+        <form action="/myPage" method="post">
+            <table border="1" width="1000">
+                <tbody>
+                    <tr height="200">
+                        <td width="200" bgcolor="#f9f9f9">
+                            <div id ="tdcell">
+                                프로필사진
+                            </div>
+                        </td>
+                        <td width="700" >
+                            <div id ="tdcell">
+                                <div class="image-container">
+                                  <span class="filebox">
+                                    <!--  -->
+                                    <img id="preview-image" src="<%= data.profilePicture %>" width="100" height="100" >
+                                    <input style="display: block;" type="file" id="input-image"  ></br></br>
+                                    <input type="file" accept="image/*" id="input-image" name="profilePicture" value="" >
+                                    <div class="file-edit-icon">
+                                        <label for="input-image">사진변경</label>
+                                        <label class="preview-de">삭제</label> 
+                                    </div>
+                                  </span>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr height="80">
+                        <td bgcolor="#f9f9f9">별명</td>
+                        
+                        <td><input id="nickname" value="<%= data.nickName %>" name="nickname"></td>
+                        
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="btn_wrap">
+                <a href>
+                    <button id="upload" type="button">적 용</button>
+                </a>
+
+                <a href>
+                    <button>취 소</button>
+                </a>
+                <a href>
+                    <button id="logout" type="button">로 그 아 웃</button>
+                </a>
+            </div>
+        </form>
+        </div>
+    
+    <!--footer-->
+    <div id="footerwrap">
+        <div id="footer">
+            <div class="footer_col">
+                <ul class="col_content">
+                    <li>Creators</li>
+                    <li><a href="#">크리에이터</a></li>
+                    <li><a href="#">스몰비즈니스</a></li>
+                </ul>
+                <ul class="col_content">
+                    <li>Partners</li>
+                    <li><a href="#">비즈니스 광고</a></li>
+                    <li><a href="#">스토어 개설</a></li>
+                    <li><a href="#">지역업체 등록</a></li>
+                </ul>
+                <ul class="col_content">
+                    <li>Developers</li>
+                    <li><a href="#">꿀단지 개발자센터</a></li>
+                    <li><a href="#">오픈API</a></li>
+                    <li><a href="#">오픈소스</a></li>
+                    <li><a href="#">꿀단지 D2</a></li>
+                    <li><a href="#">꿀단지 D2SF</a></li>
+                    <li><a href="#">꿀단지 랩스</a></li>
+                </ul>
+            </div>
+            <div class="footer_row">
+                
+                <ul class="row_content">
+                    <li><a href="#">회사소개</a></li>
+                    <li><a href="#">인재채용</a></li>
+                    <li><a href="#">제휴제안</a></li>
+                    <li><a href="#">이용약관</a></li>
+                    <li><a href="#">개인정보처리방침</a></li>
+                    <li><a href="#">청소년보호정책</a></li>
+                    <li><a href="#">꿀단지 정책</a></li>
+                    <li><a href="#">고객센터</a></li>
+                </ul>
+            </div>
+            <p class="copyright">&copy; 꿀단지 Corp.</p>
+
+        </div>
+    </div>
+</body>
+<script>
+    const previewImage = document.getElementById("preview-image");
+    let count = false;
+    let nick = nickname.value;
+    // 
+        function readImage(input) {
+        // 인풋 태그에 파일이 있는 경우
+        if(input.files && input.files[0] && count == false) {
+            count = true;
+            // 이미지 파일인지 검사 (생략)
+            // FileReader 인스턴스 생성
+            const reader = new FileReader()
+            // 이미지가 로드가 된 경우
+            reader.onload = e => {
+                previewImage.src = e.target.result
+            }
+            // reader가 이미지 읽도록 하기
+            reader.readAsDataURL(input.files[0])
+        }
+    }
+    // input file에 change 이벤트 부여
+    const inputImage = document.getElementById("input-image")
+    inputImage.addEventListener("change", e => {
+        readImage(e.target)
+    })
+    const previewde = document.querySelector(".preview-de");
+    previewde.addEventListener("click",function(){
+        if(count == true){
+            previewImage.src = "https://static.nid.naver.com/images/web/user/default.png?type=s160";
+            count = false;
+        }
+    })
+
+    upload.onclick = function(e){
+        e.preventDefault();
+        imgUpload();
+    };
+    function imgUpload(){
+        let formdata = new FormData();
+        var file = document.querySelector('#input-image').files[0];  
+        formdata.append('file', file);	
+        formdata.append('nickname', nick);
+        formdata.append('chageNickname', nickname.value);
+        $.ajax({
+            url : '/myPage',
+            type : 'post',
+            processData: false,
+            contentType: false,
+            data : formdata,
+            success : function(data){
+                alert('적용되었습니다');
+                location.reload();
+            }
+        })
+    }
+    // 적용 버튼 이미지 업로드 
+    upload.onclick = function(e){
+        e.preventDefault();
+        imgUpload();
+    };
+    function imgUpload(){
+        let formdata = new FormData();
+        var file = document.querySelector('#input-image').files[0];  
+        formdata.append('file', file);	
+        formdata.append('nickname', nick);
+        formdata.append('chageNickname', nickname.value);
+        $.ajax({
+            url : '/myPage',
+            type : 'post',
+            processData: false,
+            contentType: false,
+            data : formdata,
+            success : function(data){
+                alert('적용되었습니다');
+                location.reload();
+            }
+        })
+    }
+    // 로그아웃 버튼 쿠키 로그아웃 
+    logout.onclick = function(e){
+        e.preventDefault();
+        userLogout();
+    };
+    function userLogout(){
+        $.ajax({
+            url : '/logout',
+            type : 'get',
+            success : function(){
+                alert('로그아웃 되었습니다');
+                location.href="/";
+            }
+        })
+    }
+</script>
+</html>
+

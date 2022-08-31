@@ -1,0 +1,94 @@
+
+   * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  ul,
+  li {
+    list-style: none;
+  }
+  a {
+    text-decoration: none;
+    color: inherit;
+  }       
+
+  div{
+    display: block;
+  }
+
+  #underheader{
+    position: absolute;
+    top: 90px;
+    background-color: #ffbb2e;
+    border-bottom: 1px solid #e5e5e5;
+    width: 100vw;
+    height: 50px;
+    margin-top: -1px;
+  }
+
+  ol, ul{
+    list-style: none;
+  }
+  
+  #idcontent{
+    padding: 140px 500px 95px;
+  }
+
+  #textbox{
+    width : max-content;
+  }
+  /* .tdcell{
+    padding: 32px 31px 32px;
+  } */
+
+  td{
+    line-height: 14px;
+    text-align: left;
+    vertical-align: top;
+    letter-spacing: -1px;
+    border: 0;
+    border-top: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 32px 31px 32px;
+  }
+
+  /* h1{
+    writing-mode:horizontal-tb;
+  } */
+
+  input{
+    padding: 0 0 0 7px;
+  }
+
+  .btn_wrap{
+    text-align: center;
+    margin-top: 30px;
+    position: absolute;
+    /* width: max-content; */
+  }
+
+  .filebox label {
+    display: inline-block;
+    padding: .5em .75em;
+    /* color: #999; */
+    font-size: inherit;
+    line-height: normal;
+    vertical-align: middle;
+    background-color: #fdfdfd;
+    cursor: pointer;
+    border: 1px solid #ebebeb;
+    border-bottom-color: #e2e2e2;
+    border-radius: .25em;
+  }
+
+  .filebox input[type="file"] {  /* 파일 필드 숨기기 */
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip:rect(0,0,0,0);
+    border: 0;
+  }
