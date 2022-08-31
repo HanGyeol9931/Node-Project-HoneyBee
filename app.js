@@ -70,6 +70,31 @@ app.post("/create",(req,res)=>{
 app.get("/", (req,res)=>{  // 현재까지 메인인 log.html
     res.render("index");
 });
+app.get("/mypage", (req,res)=>{  // 현재까지 메인인 log.html
+    User.findOne({
+        raw : true,
+        where: {userId : req.cookies.user}
+    })
+    .then((e)=>{
+        res.render("myPage",{data : e});
+    })
+    .catch(()=>{
+        res.redirect("/")
+    })
+});
+app.get("/index", (req,res)=>{  // 현재까지 메인인 log.html
+    User.findOne({
+        raw : true,
+        where: {userId : req.cookies.user}
+    })
+    .then((e)=>{
+        res.render("start",{data : e});
+    })
+    .catch(()=>{
+        res.redirect("/")
+    })
+});
+
 
 //------------------------------로그인 및 쿠키 생성--------------------------------------------
 app.post('/index',(req,res)=>{    
