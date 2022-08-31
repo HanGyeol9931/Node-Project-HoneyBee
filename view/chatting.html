@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" />
+    <title>Document</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+</head>
+<style>
+    @font-face {
+        font-family: 'DungGeunMo';
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/DungGeunMo.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+        
+    }
+    body{
+        font-family: 'DungGeunMo';
+        font-weight: bold;
+        /* body 기준으로 움직이려고 relative */
+        position: relative;
+        height: 100vh;
+        overflow: hidden;
+        margin: 0;
+        box-sizing: border-box;
+        background-color: black;
+        color: white;
+        
+        
+    }
+    .content{
+        background-color: blue;
+        /* border-radius: 8px; */
+        position: absolute;
+        /* 무족건 무슨일이 있어도 정중앙 */
+        top: 50%;
+        left:50%;
+        transform: translate(-50%,-50%);
+        width: 50vw;
+        height: 50vw;
+        min-width: 250px;
+        min-height: 250px;
+        max-width: 1000px;
+        max-height: 600px;
+        border: 3px solid;
+        
+    }
+    .join_text{
+        background-color:gray;
+    }
+    .leave_text{
+        background-color: gray;
+    }
+    #send{
+        
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        border-top: 3px solid;
+        box-sizing: border-box;
+        display: flex;
+    }
+     #send #msg{
+         border: 0;
+         box-sizing: border-box;
+         padding: 10px;
+         width: 90%;   
+         /* border-radius: 0 0 0 8px; */
+    }
+    #send #sendbtn{
+        font-family: 'DungGeunMo';
+        background-color: blue;
+        color: white;
+        border: none;
+        box-sizing: border-box;
+        /* border-radius: 0 0 8px 0; */
+        padding: 10px;
+        width: 5vw;
+        min-width: 50px;
+    }
+    
+    #messages{
+        /* overflow: hidden; */
+        /* top: 30px; */
+        margin: 0;
+        padding: 0;
+        font-size: 1.4em;
+        /* max-height: 45vw;
+        min-height: 300px; */
+    }
+    #messages li {
+        padding: 5px 10px;
+        list-style: none;
+        
+    }
+    #main{
+        display: block;
+        
+        overflow: scroll;
+    }
+    #main::-webkit-scrollbar {
+        display: none;
+    }
+    .userUI{
+        font-size:1em;
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        border-bottom: 3px solid white;
+        height: 30px;
+    }
+    #userBox{
+        background-color: blue;
+        /* border-radius: 8px; */
+        position: absolute;
+        display: none;
+        text-align: center;
+        border: 3px solid;
+        border-left: 0;
+        width:20vw;
+        height:50vw;
+        max-width: 200px;
+        max-height: 600px;
+        word-break: break-all;
+        min-width: 150px;
+        min-height: 300px;
+    }
+    #userBoxUI::-webkit-scrollbar {
+        display: none;
+    }
+    #userBoxUI{
+        padding: 5px 10px;
+        list-style: none;
+        overflow: auto;
+    }
+    .secretTo{
+        background-color: orange;
+    }
+    .secretFrom{
+        background-color: green;
+    }
+    .admin_text{
+        background-color: black;
+        color: aliceblue;
+        text-decoration: bold;
+    }
+    .adminJoin_text{
+        background-color: black;
+        text-decoration: bold;
+    }
+    #buttonText{
+        display: none;
+        position:absolute;
+        z-index: 1;
+        border: 3px solid #e5e5e5;
+        background-color: blue;
+        width: 130px;
+        font-size: 1em
+        /* border-radius: 8px; */
+    }
+    .userText{
+        padding: 5px;
+        margin: 5px;
+    }
+    .userText:hover{
+        background-color: white;
+        color: blue;
+        border-radius: 3px;
+    }
+    #stopText{
+        display: none;
+    }
+    .userUI > button{
+        font-size: 1em;
+        font-family: 'DungGeunMo';
+        color: white;
+        background-color: blue;
+        padding: 5px;
+        border: 0;
+    }
+    #messages > li{
+        display: flex;
+        align-items: center;
+        /* height: 25px; */
+    }
+    input:focus {
+        outline: none;
+    }
+    .swal-modal{
+        border: 3px solid white;
+        background-color: blue ;
+        color: white ;
+    }
+    .swal-title {
+        color: white;
+    }
+    .swal-text {
+        color: white;
+    }
+    .swal-footer {
+        color: white;
+    }
+    .swal-button {
+        background-color: blue;
+        color: white;
+    }
+    .swal-button:not([disabled]):hover {
+        background-color: white;
+        color: blue;
+    }
+    .userUI > a{
+        text-decoration: none;
+        color: white;
+        padding: 5px;
+    }
+    .userUI > a:hover {
+        background-color: white;
+        color: blue;
+        
+    }
+    .userUI > button:hover {
+        background-color: white;
+        color: blue;
+    }
+    
+    #userBoxUI > .use{
+        border-bottom: 3px solid;
+        padding: 10px 0 10px 0;
+    }
+    #userBoxUI > .use:first-child{
+        border-bottom: 3px solid;
+        /* border-top: 1px solid; */
+        padding: 5px 0 10px 0 ;
+    }
+    
+</style>
+<body>
+    <div id="buttonText">
+        <div class="userText a"></div>
+        <div class="userText b"></div>
+        <div class="userText c"></div>
+        <div class="userText" id="stopText"></div>
+    </div>
+    <!-- 실시간 유저확인 (userBtn눌렀을때)-->
+    <div id="userBox">
+        <div class="userUI">접속한 유저들</div>
+        <!-- 실시간 유저 닉네임 확인 -->
+        <div id="userBoxUI">
+        </div>
+    </div>
+    <div class="content">
+        <div class="userUI">
+            <!-- <%= data %>에 유저 이름 표시 -->
+            <div>유저이름 : <span id="userName"><%= data.nickName %></span></div> 
+            <!-- 실시간 유저 수 표시 -->
+            <div id="userPage">접속자 : <span id="userNumber"></span></div> 
+            <a href="/index">메인 페이지</a>
+            <!-- 실시간 유저 확인 버튼 -->
+            <button id="userBtn">유저보기</button>
+        </div>
+        <div id="main">
+            <!-- 메세지 그려지는 곳 -->
+            <ul id="messages">
+            </ul>
+        </div>
+            <div id="send">
+                <!-- 메세지 입력 받는 곳 -->
+                <input type="text" id="msg">
+                <!-- 메세지 전송 버튼 -->
+                <button id="sendbtn">보냄</button>
+            </div>
+    </div>
+</body>
+<script>
+
+     window.onload = function(){
+        if("<%=data.authority%>" == "관리자"){
+            console.log("나는 관리자")
+            userName.innerHTML = "관리자"
+        }
+         userName.innerHTML.onchange = ()=>{
+             console.log("나 변경")
+         }
+        if(userName.innerHTML == "관리자"){
+            stopText.style.display = "block"
+        }
+        if(window.innerWidth <= 850){
+            document.querySelector(".content").style.width = "100%"
+            document.querySelector(".content").style.maxWidth = "100%"
+            document.querySelector(".content").style.height = "100%"
+            document.querySelector(".content").style.maxHeight = "100%"
+            document.querySelector(".content").style.border = "0"
+            document.querySelectorAll(".userUI")[1].style.fontSize = "3vw"
+        }
+        let users;
+        const socket = io.connect();
+        // 유저 입장시
+        socket.emit("joinRoom","<%= data.nickName %>");
+        socket.on("joinRoom", (name,user) =>{
+            messages.innerHTML += `
+            <li class="join_text">
+                ${name}님이 들어오셨습니다.
+            </li>
+            `
+            userNumber.innerHTML = user
+            down()
+            
+        });
+        socket.on("adminJoinRoom", (name,user) =>{
+            messages.innerHTML += `
+            <li class="adminJoin_text">
+                관리자 님이 들어오셨습니다.
+            </li>
+            `
+            userNumber.innerHTML = user
+            down()
+        });
+        socket.on("chat",(name,msg)=>{
+            messages.innerHTML +=`
+            <li>
+                ${name} : ${msg}
+            </li>
+            `
+            down()
+        })
+        socket.on("adminChat",(name,msg)=>{
+                messages.innerHTML +=`
+                <li class="admin_text">
+                    관리자 : ${msg}
+                </li>
+                `
+                down()
+        })
+        socket.on("secretChat",(name,user,msg)=>{
+            messages.innerHTML +=
+            `
+            <li class="secretTo">
+                ${name}님의 귓속말 : ${msg}
+            </li>
+            `    
+            down()
+        })
+        socket.on("secretChatYou",(name,user,msg)=>{
+            messages.innerHTML +=
+            `
+            <li class="secretFrom"> 
+                ${user}님에게 보낸 귓속말 : ${msg}
+            </li>
+            `
+            down()
+        })
+        socket.on("leaveRoom",(name)=>{
+            messages.innerHTML += 
+            `
+            <li class="leave_text">
+                ${name}님이 나갔습니다.
+            </li>
+            `
+            
+        });
+        socket.on("userCount",(user)=>{
+            userNumber.innerHTML = user
+        });
+        socket.on("userShow",(name)=>{
+            userBoxUI.innerHTML = "";
+            for (let i = 0; i < name.length; i++) {
+                userBoxUI.innerHTML +=
+                `
+                <li class="use">${name[i]}</li>
+                `
+                down() 
+            }
+            users = name
+        })
+        socket.on("userOut",(nickname)=>{
+            swal("주의","관리자에 의해 강제퇴장되셨습니다.")
+            setTimeout(() => {
+                location.href = "/"
+            }, 1000);
+        })
+        socket.on("return",()=>{
+            swal("주의","다시 로그인해주세요.")
+            setTimeout(() => {
+                location.href = "/"
+            }, 1000);
+        })
+        msg.onkeypress = function(e){
+            const content = document.querySelector(".content").getBoundingClientRect().top+31
+            const sendY = (send.getBoundingClientRect().top - content)+"px"
+            main.style.height = sendY
+            if(e.code == "Enter"){
+                let ScrMsg = msg.value.split(" ")
+                if(ScrMsg[0]=="/w"){
+                    // )
+                    if(users.includes(ScrMsg[1])&& users.includes("<%= data.nickName %>")){
+                        console.log(users)
+                        let ScrUser = ScrMsg[1]
+                        ScrMsg.splice(0,2)
+                        let b =ScrMsg.join(" ")
+                        if(filter(b)){
+                            console.log("이거 실행")
+                             msg.value = `/w ${ScrUser} `
+                        }
+                        console.log("나실행")
+                        socket.emit("secretChat","<%= data.nickName %>",ScrUser,b)
+                        msg.value = `/w ${ScrUser} `
+                        return             
+                    }
+                    else if(ScrMsg[1] == "<%= data.nickName %>"){
+                        console.log("이거 실행")
+                        messages.innerHTML +=`<li>자신에게는 보낼수 없습니다.</li>`
+                        down()
+                        msg.value = ""
+                    }
+                    else if(users.includes("<%= data.nickName %>") == false){
+                        swal("경고","닉네임 변경이 감지되었습니다.")
+                        setTimeout(() => {
+                            location.href = "/"
+                        }, 1000);
+                        // location.href = "/"
+                    }
+                    else{
+                        messages.innerHTML +=`<li>없는 유저 입니다.</li>`
+                        down()
+                        msg.value = ""
+                    }
+                }
+                else{
+                    console.log("이거 실행")
+                }
+                if(msg.value == ""){
+                    return
+                }
+                else{
+                    if(filter(msg.value)){
+                        msg.value = ""
+                    }
+                    else{
+                        // console.log(filter(msg.value))
+                        socket.emit("chat","<%= data.nickName %>",msg.value)
+                        msg.value = ""
+                    }
+                }
+               
+                ScrMsg = [];
+            }
+        }
+        // 마우스 우클릭 시 뜨는 메뉴창
+        window.oncontextmenu = function (e) {
+            e.preventDefault()
+        };
+        document.onclick = (e)=>{
+            // 노출 초기화
+            buttonText.style.display = 'none';   
+            buttonText.style.top = null;
+            buttonText.style.left = null;
+        };
+        buttonText.onclick = (e)=>{
+            if(e.target.className == "userText a"){
+                // alert("아직 준비 중입니다.")
+                swal("주의","아직 준비 중입니다.") 
+            }
+            else if(e.target.className == "userText b"){
+                alert("아직 준비 중입니다.")
+            }
+            else if(e.target.className == "userText c"){
+                alert("아직 준비 중입니다.")
+            }
+            else if(e.target.id == "stopText"){
+                $.ajax({
+                    url : "/userOut",
+                    type : "post",
+                    data : { nickname : e.target.children[0].innerHTML },
+                    success : function(data){
+                        if (data !== null)
+                        { 
+                            return alert(data);
+                        }
+                        else{
+                            return
+                        }
+                    }
+                })
+            }
+        }
+
+        userBox.onmousedown = (e)=>{
+            const x = e.pageX + 'px'; // 현재 마우스의 X좌표
+            const y = e.pageY + 'px'; // 현재 마우스의 Y좌표
+            
+            if(e.target.innerHTML== "관리자"){
+                return 
+            }
+            else if( e.target.className == "use" && e.button == 2){
+                buttonText.style.position = 'absolute'; 
+                buttonText.style.left = x;
+                buttonText.style.top = y;
+                buttonText.style.display = 'block';
+                buttonText.style.zIndex = '2';
+
+                document.querySelectorAll(".userText")[0].innerHTML = `<span class="userNickName">${e.target.innerHTML}</span> 님 게시글보러가기 `
+                document.querySelectorAll(".userText")[1].innerHTML = `<span class="userNickName">${e.target.innerHTML}</span> 님 정보 보기` 
+                document.querySelectorAll(".userText")[2].innerHTML = `<span class="userNickName">${e.target.innerHTML}</span> 님 신고하기`
+                document.querySelectorAll(".userText")[3].innerHTML =`<span class="userNickName">${e.target.innerHTML}</span> 님 강퇴하기`
+            }
+            
+            
+        }
+        sendbtn.onclick = function(){
+            if(msg.value == ""){
+                    return;
+                }
+            else{
+                let ScrMsg = msg.value.split(" ")
+                if(ScrMsg[0]=="/w"){
+                    // )
+                    if(users.includes(ScrMsg[1])&& users.includes("<%= data.nickName %>")){
+                        console.log(users)
+                        let ScrUser = ScrMsg[1]
+                        ScrMsg.splice(0,2)
+                        let b =ScrMsg.join(" ")
+                        if(filter(b)){
+                            console.log("이거 실행")
+                             msg.value = `/w ${ScrUser} `
+                        }
+                        console.log("나실행")
+                        socket.emit("secretChat","<%= data.nickName %>",ScrUser,b)
+                        msg.value = `/w ${ScrUser} `
+                        return             
+                    }
+                    else if(ScrMsg[1] == "<%= data.nickName %>"){
+                        console.log("이거 실행")
+                        messages.innerHTML +=`<li>자신에게는 보낼수 없습니다.</li>`
+                        down()
+                        msg.value = ""
+                    }
+                    else if(users.includes("<%= data.nickName %>") == false){
+                        swal("경고","닉네임 변경이 감지되었습니다.");
+                        setTimeout(() => {
+                            location.href = "/"
+                        }, 1000);
+                    }
+                    else{
+                        messages.innerHTML +=`<li>없는 유저 입니다.</li>`
+                        down()
+                        msg.value = ""
+                    }
+                }
+                else{
+                    console.log("이거 실행")
+                }
+                if(msg.value == ""){
+                    return
+                }
+                else{
+                    if(filter(msg.value)){
+                        msg.value = ""
+                    }
+                    else{
+                        // console.log(filter(msg.value))
+                        socket.emit("chat","<%= data.nickName %>",msg.value,socket.id)
+                        msg.value = ""
+                    }
+                }
+                ScrMsg = []
+                    
+            }
+        }    
+        window.onresize = (e)=>{
+            const x = document.querySelector(".content").getBoundingClientRect().right+"px"
+            const y = document.querySelector(".content").getBoundingClientRect().top+"px"
+            userBox.style.position = 'absolute'; 
+            userBox.style.left = x;
+            userBox.style.top = y;
+            const content = document.querySelector(".content").getBoundingClientRect().top+31
+            const sendY = (send.getBoundingClientRect().top - content)+"px"
+            main.style.height = sendY
+            const a = userBox.getBoundingClientRect().bottom - document.querySelectorAll(".userUI")[0].getBoundingClientRect().bottom - 10
+            userBoxUI.style.height = a+"px"
+            if(window.innerWidth <= 850){
+                document.querySelector(".content").style.width = "100%"
+                document.querySelector(".content").style.maxWidth = "100%"
+                document.querySelector(".content").style.height = "100%"
+                document.querySelector(".content").style.maxHeight = "100%"
+                document.querySelector(".content").style.border = "0"
+                document.querySelectorAll(".userUI")[1].style.fontSize = "3vw"
+            }
+            else{
+                document.querySelector(".content").style.width = "50vw"
+                document.querySelector(".content").style.maxWidth = "1000px"
+                document.querySelector(".content").style.height = "50vw"
+                document.querySelector(".content").style.maxHeight = "600px"
+                document.querySelector(".content").style.border = "1px solid"
+                document.querySelectorAll(".userUI")[1].style.fontSize = "1em"
+            }
+        }
+        userBtn.onclick = ()=>{
+            if(userBox.style.display == "block"){
+                userBox.style.display = "none"
+            }else{
+                if(window.innerWidth <= 850){
+                    // document.onclick = (e)=>{
+                    //     // 노출 초기화
+                    //     userBox.style.display = 'none';   
+                    //     userBox.style.top = null;
+                    //     userBox.style.left = null;
+                    // };
+                    userBox.style.display = "block"
+                    userBox.style.position = "absolute"
+                    userBox.style.zIndex = "1"
+                    userBox.style.border = "1px solid"
+                    userBox.style.backgroundColor = "blue"
+                    const x = (userBtn.getBoundingClientRect().left - 70)+"px"
+                    const y = (userBtn.getBoundingClientRect().bottom + 5)+"px"
+                    userBox.style.left = x;
+                    userBox.style.top = y;
+                    userBox.ontouchstart = (e)=>{
+                        if(e.target.className == "use" && e.target.innerHTML != "<%= data.nickName %>"){
+                            msg.value = `/w ${e.target.innerHTML} `
+                        }  
+                    }
+                }
+                else{
+                    const x = document.querySelector(".content").getBoundingClientRect().right+"px"
+                    const y = document.querySelector(".content").getBoundingClientRect().top+"px"
+                    userBox.style.position = 'absolute'; 
+                    userBox.style.left = x;
+                    userBox.style.top = y;
+                    const a = userBox.getBoundingClientRect().bottom - document.querySelectorAll(".userUI")[0].getBoundingClientRect().bottom - 10
+                    userBoxUI.style.height = a+"px"
+                    userBox.style.display = "block"
+                    userBox.onclick = (e)=>{
+                        if(e.target.className == "use" && e.target.innerHTML != "<%= data.nickName %>"){
+                            msg.value = `/w ${e.target.innerHTML} `
+                        }  
+                    }
+                    
+                }
+            }
+        }
+        function down(){
+            const x = document.querySelector(".content").getBoundingClientRect().right+"px"
+            const y = document.querySelector(".content").getBoundingClientRect().top+"px"
+            userBox.style.position = 'absolute'; 
+            userBox.style.left = x;
+            userBox.style.top = y;
+            const content = document.querySelector(".content").getBoundingClientRect().top+31
+            const sendY = (send.getBoundingClientRect().top - content)+"px"
+            main.style.height = sendY
+            const a = userBox.getBoundingClientRect().bottom - document.querySelectorAll(".userUI")[0].getBoundingClientRect().bottom - 10
+            userBoxUI.style.height = a+"px"
+            main.scrollTop = main.scrollTop + main.scrollHeight
+        }
+        function filter(msg){
+            const a = " ---, @, 섹스, 자지, 놈, 년, 노마, 보지, 김한결, 한결 , 결, 발롬아, ▪️, ▪, ◾, ――, - -, ― ―, ^^ 7, ^ ^ 7, ^^7, ^7, ;;, ^노^, ￣, ⊥, ─ ─, ━ ━, ──, ━━, ┴, ้, ̆̈, 1빠, ==, 2빠, D쥐고, D지고, jonna, jot같, mi쳤, tlqkf, wlfkf, 갈틱폰, gartic, 같은 새끼, 같은새끼, 개 새끼, 개같아, 개같은, 개같을, 개같게, 개나 소나, 개나대, 개나소나, 개넷, 개년, 개념빠가, 느갭, 도태남, 도태녀, 도.태, 도1태, 개독, 개돼지, 개련, 개련, 개부랄, 개삼성, 개새기, 개새끼, 개섹, 풀발, 씹선, 개셈, 개소리, 개쓰래기, 개저씨, 거지같, 그지, 계새끼, 골 빈, 골1빈, 골빈, 괘새끼, 그1켬, 그지 같, 그지같, 김치녀, 한녀, 한.녀, 한남들, 한.남, 그남들, 자들자들, 된장녀, 피싸개, 앙기모띠, 보이루, 소추, 퍄퍄, 방구석, 석 스, 형보수지, 눈나, 김여사, 여적여, 자적자, 남적남, 보적보, 삼일한, 보슬아치, 보징어, 엑윽, 헤으응, 이기야, 부왘, 보픈카, 보라니, 상폐녀, 배빵, 누보햄, 자박꼼, 로린 , 아몰랑, 업계포상, 번녀, 번남, 번 녀, 번 남, 대남, 대녀, 개념녀, 냄저, 빨갱, 뷔페미, 급남, 등남, 급녀, 등녀, 꼴페, -2-, -1-, 문재앙, 윤재앙, 렬.이다, 렬이다, 쿵쾅, 쿵.쾅, 펨베, 펨코, 펨.코, 엠팍, 쿰.척, 쿰척, ㅗㅜㅑ, 오우야, 껒여, 꺼지세요, 꺼져요, 로 꺼져, 로꺼져, 로 꺼.져, 꺼.지, 꼴데, 설거지론, 퐁퐁남, 퐁퐁녀, 나빼썅, 나쁜 새끼, 넌씨눈, 년놈, 노알라, 노인네, 노친네, 느그, 느금, 뇌 텅, 뇌1텅, 뇌텅, 눈깔 파, 눈깔파, 눈새, 늬믜, 늬미, 니년, 니믜, 니미럴, 닝기리, 닥1, 닥2, 닥전, 닥쳐라, 닥치세, 닥후, 대가리, 머가리, 머.가리, 대.가리, 꽃밭, 꽃.밭, 대갈, 덬, 도라이, 도랏, 도랐, 도른, 돌앗구만, 돌앗나, 돌앗네, 돌았구만, 돌았나, 돌았네, 둄마, 뒈져, 뒤져라, 뒤져버, 뒤져야, 뒤져야지, 뒤져요, 뒤졌, 뒤지겠, 뒤지고싶, 뒤지길, 뒤진다, 뒤질, 듣보, 디져라, 디졌, 디지고, 디질, 딴년, 또라이, 또라인, 똘아이, 아재, 네 아줌마, 네 아저씨, 네아줌마, 네아저씨, 뚝배기깨, 뚝배기 깨, 뚫린 입, 뚫린입, 라면갤, 런년, 럼들, 레1친, 레기같, 레기네, 레기다, 레친, 롬들, ㅁ.ㄱ, ㅁㅊ, ㅁ친, 미새, 맘충, 🤏🏻, 🤏, 망돌, 머갈, 머리 텅, 머리텅, 먹.금, 먹.끔, 먹1금, 먹금, 먹끔, 명존, 뭔솔, 믜칀, 믜친, 미1친, 미놈, 미시친발, 미쳣네, 미쳤니, 미췬, 미칀, 미친 새, 미친~, 미친개, 미친새, 미친색, 미틴, 및힌, 줘패, 꼬추, 미치ㄴ, ㅅ.ㄲ, 색퀴, ㅅ끼, 한남들, 흉자, 미친넘, 및친, GR도, 미핀놈, 샛기, 폐급, xportsnews, G랄, 세키, 미치누, d져, ㅂㅁㄱ, ㅂㅊ, ㅂ크, 발놈, 별창, 병1신, 병맛, 병신, 봊, 보전깨, 싸개, 븅신, 빠큐, 빡새끼, 빻았, 빻은, 뻐규, 뻐큐, 뻑유, 뻑큐, 뻨큐, 뼈큐, 쉰내, ㅄ, ㅅ,ㅂ, ㅅ.ㅂ, ㅅ1ㅂ, ㅅ1발, ㅅㄲ네, ㅅㄲ들, 친ㅅㄲ, 친 ㅅㄲ, ㅅ1ㄲ, ㅅ루, ㅅㅋ, ㅅㅌㅊ, 사새끼, 새.끼, 새1끼, 새1키, 새77ㅣ, 새끼라, 새끼야, 새퀴, 새킈, 새키, 색희, 색히, 샊기, 샊히, 샹년, 섀키, 서치해, 섬숭이, 성괴, 솔1친, 솔친, 쉬발, 쉬버, 쉬이바, 쉬이이, 쉬펄, 슈1발, 슈레기, 슈발, 슈벌, 슈우벌, 슈ㅣ발, 스벌, 슨상님, 싑창, 시1발, 시미발친, 시미친발, 시바라지, 시바류, 시바시바, 시바알, 시발, ㅅㅂ, ㅅ.ㅂ, 닥 쳐, 쌉스, 썩열, 썩렬, 쎡열, 쎡렬, 대깨, 야랄, ㅂㅅ, ㅂ.ㅅ, ㅂ1ㅅ, ㅅ1ㅂ, 버튼눌, 버튼 눌, egr, 발작, 발.작, 렬받, 렬스, 렬 한, 렬 받, 렬 하, 렬 스, 멍.청, - 2 -, - 1 -, 아줌내, 머깨, ㅅㄹ스, ㅅㄹ하, ㅅㄹ같, 석열하, 석열스, ㅅㅇ스, ㅅㅇ같, ㅅㅇ하, 등신아, 미친것, 개때리, 개떄려, 염병하, 염병짓, 종간나, 빠가사리, 새기들, 애새기, ktestone, ❌, ✖️, 🖕, 시방새, 시벌탱, 시볼탱, 시부럴, 시부렬, 시부울, 시뷰럴, 시뷰렬, 시빨, 시새발끼, 시이발, 시친발미, 시키가, 시팔, 시펄, 십창, 퐁퐁단, 십팔, ㅆ1ㄺ, ㅆ1ㅂ, ㅆㄹㄱ, ㅆㄺ, ㅆㅂ, 싸가지 없, 싸가지없, 싸물어, 쌍년, 쌍놈, 쌔끼, 썅, 썌끼, 쒸펄, 쓰1레기, 쓰래기같, 쓰레기 새, 쓰레기새, 쓰렉, 씝창, 씨1발, 씨바라, 씨바알, 씨발, 씨.발, 씨방새, 씨버럼, 씨벌, 씨벌탱, 씨볼탱, 씨부럴, link.coupang, 씨부렬, 씨뷰럴, 씨뷰렬, 씨빠빠, 씨빨, 씨뻘, 씨새발끼, 씨이발, 씨팔, 씹귀, 씹못, 씹뻐럴, 씹새끼, 씹쌔, 씹창, 씹치, 씹팔, 씹할, ㅇㅍㅊㅌ, 아가리, 아닥, 더쿠, 덬, 더.쿠, ㄷㅋ, 아오 ㅅㅂ, 아오 시바, 아오ㅅㅂ, 아오시바, 안물안궁, 애미, 앰창, 닥눈삼, 에라이 퉤, 에라이 퉷, 에라이퉤, 에라이퉷, 엠뷩신, 엠븽신, 엠빙신, 시녀, 엠생, 엠창, 엿같, 엿이나, 예.질, 예1질, 예질, 옘병, 외1퀴, 외퀴, 웅앵, 웅엥, 은년, 은새끼, 이 새끼, 이새끼, 一 一, 一 ㅡ, 一一, 一ㅡ, 입 털, 입털, ㅈ.ㄴ, ㅈ소, ㅈㄴ, ㅈㄹ, 지잡, 절라, 정신나갓, 정신나갔, 젖 같, 젗같, 젼나, 젼낰, 졀라, 졀리, 졌같은, 졏 같, 조온, 조온나, 족까, 존 나, 존 나, 존,나, 존.나, 존1, 존1나, 🚬, 멍청, ?feature=share, 능지, 조센징, 짱깨, 짱개, 짱꼴라, 착짱, 착., 챡., 죽짱, 쥭., 쨩., 짱., 쨩1, 착1, 쥭1, 짱골라, 좃, 종나, 곱창났, 곱창나, 좆, 좁밥, 좋소, 좇같, 죠낸, 죠온나, 죤나, 죤내, 죵나, 죶, 죽어버려, 죽여 버리고, 죽여버리고, 죽여불고, 죽여뿌고, 줬같은, 쥐랄, 쥰나, 쥰내, 쥰니, 쥰트, 즤랄, 지 랄, 지1랄, 지1뢰, 지껄이, 지들이, 지랄, ezr, 2zr, 2gr, 지롤, 렬같, 열같, 렬 같, 열 같, 석 렬, 썩 렬, 썩 열, 찢재, 찢 재, 찢1, 우동사리, ㅁ청, 석내, 렬.하, 열.하, ㅉ, ㅉ질한, 짱깨, 꼴라, 꿜라, 짱께, 쪼녜, 쪼다, 착짱죽짱, 섬숭이, 쪽본, 쪽1바리, 쪽바리, 쪽발, 쫀 맛, 쫀1, 쫀귀, 쫀맛, 쫂, 쫓같, 쬰잘, 쬲, 쯰질, 찌1질, 찌질한, 찍찍이, 찎찎이, 찝째끼, 창년, 창녀, 창남, 창놈, 창넘, 처먹, 凸, 첫빠, 쳐마, 쳐먹, 쳐받는, 쳐발라, 취ㅈ, 취좃, 친 년, 한 년, 친 놈, 친구년, 친년, 한년, 친노마, 친놈, colormytree, ㅍㅌㅊ, 핑1프, 핑거프린세스, 핑끄, 핑프, ㅎㅃ, ㅎㅌㅊ, 헛소리, 손놈, 혐석, 호로새끼, 호로잡, 화낭년, 화냥년, 후.려, 후1려, 후1빨, 후려, 후빨, ㅗ, ㅡ 一, ㅡ ㅡ, ㅡ一, ————, ㅡㅡ, ㅡㅡ, ㅡㅡ, ส, ค็, ้, ็, zoomin.cur, eventHostId, open., onchat, ajax_comment, stub-extra, -stub, line.me, ask.fm, adinc.co.kr, vonvon, superfeed, lumieyes, www.inlive, theqoo, dmitory, _enliple, apt_review, showcat, 쇼캣, .pls, stype=3, $(', bitly, poomang.com, comment_memo, vote.php, onmouse, onkeyup, newsnack, onkeydown"
+            const words = a.split(", ")  
+            for (let n = 0; n < words.length; n++) {
+                if (msg.includes(words[n])) {
+                    $.ajax({
+                        url : "/userWarning",
+                        type : "post",
+                        data : { nickname : "<%= data.nickName %>"},
+                        success : function(data){
+                            if (data == "경고 초과로 강제 퇴장 되셨습니다.")
+                            { 
+                                setTimeout(() => {
+                                    location.href = "/"
+                                }, 1000);
+                                return swal("주의",data);;
+                            }
+                            else{
+                                return swal("주의",data);
+                            }
+                        }
+                    })
+                    return true;
+                }
+            }
+        }
+        function userOut (){
+            let ScrMsg = msg.value.split(" ")
+            if(ScrMsg[0]=="/out"){
+                if(users.includes(ScrMsg[1])){
+                    $.ajax({
+                        url : "/userOut",
+                        type : "post",
+                        data : { nickname : ScrMsg[1]},
+                        success : function(data){
+                            if (data == "out")
+                            { 
+                                return messages.innerHTML += ScrMsg[1]+"님이 강제 퇴장 되었습니다.";
+                            }
+                            else{
+                                return swal("주의",data);
+                            }
+                        }
+                    })
+                    return             
+                }
+                else{
+                    return
+                }
+            }            
+        }
+    }
+
+</script>
+</html>

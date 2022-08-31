@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+</head>
+<style>
+    @font-face {
+        font-family: 'DungGeunMo';
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/DungGeunMo.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+    }
+ body{
+     margin: 0;
+     padding: 0;
+     height: 100%;
+     background-color:black;
+     font-family: "DungGeunMo";
+     
+ }
+.image{
+    width: 50vh;
+    height: 50vh;
+    position: relative;
+    bottom: 5vh;
+    position: absolute;
+    top: 10%;
+    left:15%;
+    
+}
+.tilte{
+    width: 100%;
+    text-align: center;
+    position: relative;
+    top: 3vh;
+}
+.content{
+    font-size: 3vh;
+    width: 100%;
+}
+.userName{
+    font-family: "DungGeunMo";
+    color:white;
+    font-size: 2em;
+    position: relative;
+    bottom: 10vh;
+    width: 100%;
+    text-align: center;
+}
+.tilteContent{
+   margin-left: 1vw;
+   margin-right: 1vw;
+   
+}
+.userBox{
+    box-sizing: border-box;
+    border: 3px solid white;
+    font-family: "DungGeunMo";
+    color:white;
+    width: 50vw;
+    height: 50vh;
+    min-width: 280px;
+    max-width: 700px;
+    background-color: blue;
+    position: absolute;
+    top: 50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.mypage{
+    position: relative;
+    bottom: 0vh;
+}
+a{  
+    font-family: "DungGeunMo";
+    color:white;
+    text-decoration: none;
+    padding: 10px;
+    font-size: 1em;
+}
+.page{
+    margin-right: 1vw;
+    padding: 10px;
+    font-size: 1em;
+}
+.page:hover{
+    background-color: white;
+    color: blue;
+}
+a:hover{
+    
+    background-color: white;
+    color: blue;
+}
+/* .box{
+    width: 52vw;
+    height: 55vh;
+    max-width: 720px;
+    min-width: 300px;
+    background-color: gray;
+    position: absolute;
+    top: 49%;
+    left:50%;
+    transform: translate(-50%,-50%);
+} */
+.boxContent{
+    float: right;
+    font-size: 3vh;
+    margin-right: 1vw;
+}
+button{
+    font-family: "DungGeunMo";
+    border: 0;
+    background-color: blue;
+    color: white;
+}
+#page{
+    margin-right: 1vw;
+    padding: 10px;
+    font-size: 1em;
+}
+#page:hover{
+    background-color: white;
+    color: blue;
+}
+.userNameText{
+    position: relative;
+    top: 1vw;
+}
+
+</style>
+<body>
+    <div class="box">
+        <div class="boxContent">X</div>
+    </div>
+    <div class="content">
+        <div class="userBox">
+            <div class="userName">
+                <%=data.nickName%>님
+                <div class="userNameText">환영합니다.</div>
+            </div>
+            <div class="mypage">
+                <button id="page" name="page">마이페이지</button> 
+                <span class="page">로그아웃</span>
+            </div>
+            <div class="tilte">
+                <span class="tilteContent"><a href="">게시판</a></span>
+                <span class="tilteContent"><a href="/chatting">채팅방</a></span>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    if(window.innerWidth <= 850){
+        document.querySelector(".userBox").style.width = "100%"
+        document.querySelector(".userBox").style.maxWidth = "100%"
+        document.querySelector(".userBox").style.height = "100%"
+        document.querySelector(".userBox").style.maxHeight = "100%"
+        document.querySelector(".userBox").style.border = "0"
+        // document.querySelectorAll(".userUI")[1].style.fontSize = "3vw"
+    }
+    else{
+        document.querySelector(".userBox").style.width = "50vw"
+        document.querySelector(".userBox").style.maxWidth = "1000px"
+        document.querySelector(".userBox").style.height = "50vw"
+        document.querySelector(".userBox").style.maxHeight = "600px"
+        document.querySelector(".userBox").style.border = "1px solid"
+        // document.querySelectorAll(".userUI")[1].style.fontSize = "1em"
+    }
+    page.onclick = ()=>{
+        $.ajax({
+                url : "/mypage",
+                type : "get",
+                success : function(data){
+                    if (data)
+                    { 
+                        // console.log(data)
+                        location.href = "/mypage"
+                        return 
+                    }
+                    else{
+                        return 
+                    }
+                }
+            })
+    }
+</script>
+</html>
