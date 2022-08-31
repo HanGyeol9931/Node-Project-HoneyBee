@@ -111,7 +111,7 @@ app.post('/index',(req,res)=>{
                 expires : new Date(Date.now() + 900000),
                 httpOnly : true
                 });
-                res.render('myPage',{data : e});  
+                res.render('start',{data : e});  
             }else if((userid && userpw) == ""){ // 유저아이디와 패스워드가 공란이라면 
                 res.send('<script type="text/javascript">alert("아이디와 비밀번호를 입력해주세요."); window.location.href="/";</script>');
             }

@@ -86,12 +86,12 @@ a{
     padding: 10px;
     font-size: 1em;
 }
-.page{
+#logout{
     margin-right: 1vw;
     padding: 10px;
     font-size: 1em;
 }
-.page:hover{
+#logout:hover{
     background-color: white;
     color: blue;
 }
@@ -149,7 +149,7 @@ button{
             </div>
             <div class="mypage">
                 <button id="page" name="page">마이페이지</button> 
-                <span class="page">로그아웃</span>
+                <span id="logout">로그아웃</span>
             </div>
             <div class="tilte">
                 <span class="tilteContent"><a href="">게시판</a></span>
@@ -159,6 +159,9 @@ button{
     </div>
 </body>
 <script>
+    logout.onclick = ()=>{
+        location.href = "/logout"
+    }
     if(window.innerWidth <= 850){
         document.querySelector(".userBox").style.width = "100%"
         document.querySelector(".userBox").style.maxWidth = "100%"
