@@ -200,7 +200,6 @@
     inputImage.addEventListener("change", e => {
         readImage(e.target)
     })
-
     const previewde = document.querySelector(".preview-de");
     previewde.addEventListener("click",function(){
         if(count == true){
@@ -236,7 +235,6 @@
         e.preventDefault();
         imgUpload();
     };
-    
     function imgUpload(){
         let formdata = new FormData();
         var file = document.querySelector('#input-image').files[0];  
@@ -259,6 +257,7 @@
     logout.onclick = function(e){
         e.preventDefault();
         location.href = "/index"
+        
     };
     
 </script>

@@ -72,7 +72,7 @@ app.post("/create",(req,res)=>{
 app.get("/", (req,res)=>{  // 현재까지 메인인 log.html
     res.render("index");
 });
-app.get("/mypage", (req,res)=>{  // 현재까지 메인인 log.html
+app.get("/mypage", (req,res)=>{  
     User.findOne({
         raw : true,
         where: {userId : req.cookies.user}
@@ -84,7 +84,8 @@ app.get("/mypage", (req,res)=>{  // 현재까지 메인인 log.html
         res.redirect("/")
     })
 });
-app.get("/index", (req,res)=>{  // 현재까지 메인인 log.html
+
+app.get("/index", (req,res)=>{  
     User.findOne({
         raw : true,
         where: {userId : req.cookies.user}
@@ -106,22 +107,29 @@ app.post('/index',(req,res)=>{
         raw : true,
         where : {userId:userid},
     }).then((e)=>{ // findOne을해서 담은 정보를 e에 넣음
-        const hashPassword = e.userPassword;
-        bcrypt.compare(userpw, hashPassword, (err, same) => {
-            if(same){
-                res.cookie("user",userid,{ // 로그인시 id로 쿠키만들기
-                expires : new Date(Date.now() + 900000),
-                httpOnly : true
-                });
-                res.render('start',{data : e});  
-            }else if((userid && userpw) == ""){ // 유저아이디와 패스워드가 공란이라면 
-                res.send('아이디와 비밀번호를 입력해주세요.');
-            }
-            else{
-                res.send('<script type="text/javascript">alert("로그인 정보가 일치하지 않습니다."); window.location.href="/";</script>');
-            }
-        })
-    });
+        if((userid && userpw) == ""){ // 유저아이디와 패스워드가 공란이라면 
+            res.send('<script type="text/javascript">alert("아이디와 비밀번호를 입력해주세요."); location.href="/";</script>');
+        } else if(e===null){
+            res.send('<script type="text/javascript">alert("없는정보입니다"); location.href="/";</script>');
+        }
+        else{
+            const hashPassword = e.userPassword;
+            bcrypt.compare(userpw, hashPassword, (err, same) => {
+                if(same){
+                    res.cookie("user",userid,{ // 로그인시 id로 쿠키만들기
+                    expires : new Date(Date.now() + 900000),
+                    httpOnly : true
+                    });
+                    res.render('start',{data : e});  
+                }
+                else{
+                    res.send('<script type="text/javascript">alert("로그인 정보가 일치하지 않습니다."); window.location.href="/";</script>');
+                }
+            })
+        }
+    }).catch((err)=>{
+        res.send(err);
+    })
 });
 //------------------------------------로그아웃-----------------------------------------------------
 app.get('/logout', (req,res)=>{
