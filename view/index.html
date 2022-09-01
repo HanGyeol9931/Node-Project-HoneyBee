@@ -5,6 +5,7 @@
   <title>로그인/회원가입페이지</title>
   <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css'>
 <link rel='stylesheet' href='https://unicons.iconscout.com/release/v2.1.9/css/unicons.css'><link rel="stylesheet" href="view/style.css">
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 </head>
@@ -35,7 +36,7 @@
 													<i class="input-icon uil uil-at"></i>
 												</div>	
 												<div class="form-group mt-2">
-													<input type="password" name="userPassword" class="form-style" placeholder="비밀번호" id="userPassword" autocomplete="off" required>
+													<input type="password" name="userPassword" class="form-style" placeholder="비밀번호" id="userPassword"  required>
 													<i class="input-icon uil uil-lock-alt"></i>
 												</div>
 												<button class="btn mt-4 submit" >꿀단지 로그인</button>
@@ -44,26 +45,26 @@
 				      					</div>
 			      					</div>
 			      				</div>
-								<!-- 로그인 / 회원가입 구분선 -->
+<!------------------------------------------------------------- 로그인 / 회원가입 구분선---------------------------------------------------------------------------- -->
 								<div class="card-back">
 									<div class="center-wrap">
 										<div class="section text-center">
 											<h4 class="mb-4 pb-3">회원가입</h4>
-											<form action="/create" method="post">
+											<!-- <form action="/create" method="post"> -->
 												<div class="form-group">
 													<input type="text" name="nickName" class="form-style" placeholder="닉네임" id="nickName" autocomplete="off">
 													<i class="input-icon uil uil-user"></i>
 												</div>	
 												<div class="form-group mt-2">
-													<input type="text" name="userId" class="form-style" placeholder="아이디" id="userId" autocomplete="off">
+													<input type="text" name="joinId" class="form-style" placeholder="아이디" id="joinId" autocomplete="off">
 													<i class="input-icon uil uil-at"></i>
 												</div>	
 												<div class="form-group mt-2">
-													<input type="password" name="userPassword" class="form-style" placeholder="비밀번호" id="userPassword" autocomplete="off">
+													<input type="password" name="joinPassword" class="form-style" placeholder="비밀번호" id="joinPassword" autocomplete="off">
 													<i class="input-icon uil uil-lock-alt"></i>
 												</div>
-												<button class="btn mt-4 submit">회원가입</button>
-											</form>
+												<button class="btn mt-4 submit" id = "signIn">회원가입</button>
+											<!-- </form> -->
 				      					</div>
 			      					</div>
 			      				</div>
@@ -78,4 +79,43 @@
 <!-- partial -->
 
 </body>
+<script>
+	const a =["@","!","관리자","섹","발","끼","병","신","년","놈","롬","븅","뵹","롬","럼","자지","보지","따","추","창희","순현"]
+	signIn.onclick = ()=>{
+         const nickname = nickName.value
+		 a.forEach(e => {
+			if(nickname.includes(e) || nickname.includes(" ")){
+				alert("다른 닉네임으로 해주세요");
+				nickname = ""
+			}
+		});
+		console.log(joinId.value)
+         if(nickname == ""){
+            alert("닉네임을 입력해주세요")
+         }
+         else{
+			$.ajax({
+				url : "/create",
+				type : "post",
+				data : {
+						nickName : nickname, 
+						joinId : joinId.value,
+						joinPassword : joinPassword.value
+					},
+				success : function(data){
+					if (data == "success")
+					{ 
+						location.href = "/start";
+						return 
+					}
+					else{
+						alert(data);
+						location.href = "/index";
+						return 
+					}
+				}
+			}) 
+         }
+     }
+</script>
 </html>

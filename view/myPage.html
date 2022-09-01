@@ -153,7 +153,6 @@
             <div class="profileName">닉네임 수정 : <input id="nickname" value="<%= data.nickName %>" name="nickname"></div>
             <div class="profileBtn">
                 <button id="upload" type="button">적 용</button>
-                <button>취 소</button>
                 <button id="logout" type="button">돌 아 가 기</button>
             </div>
         </div>
@@ -201,6 +200,7 @@
     inputImage.addEventListener("change", e => {
         readImage(e.target)
     })
+
     const previewde = document.querySelector(".preview-de");
     previewde.addEventListener("click",function(){
         if(count == true){
@@ -236,6 +236,7 @@
         e.preventDefault();
         imgUpload();
     };
+    
     function imgUpload(){
         let formdata = new FormData();
         var file = document.querySelector('#input-image').files[0];  
@@ -258,7 +259,6 @@
     logout.onclick = function(e){
         e.preventDefault();
         location.href = "/index"
-        
     };
     
 </script>

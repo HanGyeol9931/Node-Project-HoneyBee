@@ -43,24 +43,26 @@ app.get("/", (req,res)=>{  // 현재까지 메인인 log.html
 //-------------------------------회원가입 및 비밀번호 암호화-------------------------------
 app.post("/create",(req,res)=>{
     // create이 함수를 사용하면 해당 테이블에 컬럼을 추가할 수 있다.
-    const { nickName, userPassword, userId }  = req.body;
-    if((nickName && userPassword) == ""){ 
-        res.send('<script type="text/javascript">alert("아이디와 비밀번호를 입력해주세요."); window.location.href="/";</script>');
+    const { nickName, joinId, joinPassword }  = req.body;
+    console.log(joinId)
+    if((joinId && joinPassword) == ""){ 
+        res.send('비밀번호를 입력해주세요.');
     }else{
         // bcrypt 활용 비밀번호 암호화
-        bcrypt.hash(userPassword, 10, (err,encrypted)=>{
+        bcrypt.hash(joinPassword, 10, (err,encrypted)=>{
             const create = User.create({  
                 nickName : nickName,
                 userPassword : encrypted,
-                userId : userId,
+                userId : joinId,
                 userStop : 0,
                 userWarning : 0,
                 authority : "일반",
                 // 위의 객체를 전달해서 컬럼을 추가할수있다.
             }).then((e)=>{ // 회원가입 성공 시
-                res.send('<script>alert("회원가입을 축하합니다!"); document.location.href="/";</script>');
+                res.send('회원가입을 축하합니다!');
             }).catch((err)=>{ // 회원 가입 실패 시 
-                res.send('<script>alert("중복된 아이디입니다"); document.location.href="/";</script>');
+                // console.log(err)
+                res.send('중복된 아이디입니다');
             })
         })
     }
@@ -102,7 +104,7 @@ app.post('/index',(req,res)=>{
     const userpw = req.body.userPassword;
     User.findOne({
         raw : true,
-        where : {userId:userid}
+        where : {userId:userid},
     }).then((e)=>{ // findOne을해서 담은 정보를 e에 넣음
         const hashPassword = e.userPassword;
         bcrypt.compare(userpw, hashPassword, (err, same) => {
@@ -113,7 +115,7 @@ app.post('/index',(req,res)=>{
                 });
                 res.render('start',{data : e});  
             }else if((userid && userpw) == ""){ // 유저아이디와 패스워드가 공란이라면 
-                res.send('<script type="text/javascript">alert("아이디와 비밀번호를 입력해주세요."); window.location.href="/";</script>');
+                res.send('아이디와 비밀번호를 입력해주세요.');
             }
             else{
                 res.send('<script type="text/javascript">alert("로그인 정보가 일치하지 않습니다."); window.location.href="/";</script>');
