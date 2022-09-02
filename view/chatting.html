@@ -111,7 +111,7 @@
         justify-content: space-around;
         align-items: center;
         border-bottom: 3px solid white;
-        height: 30px;
+        height: 3.5vh;
     }
     #userBox{
         background-color: blue;
@@ -294,7 +294,9 @@
             document.querySelector(".content").style.height = "100%"
             document.querySelector(".content").style.maxHeight = "100%"
             document.querySelector(".content").style.border = "0"
-            document.querySelectorAll(".userUI")[1].style.fontSize = "3vw"
+            document.querySelectorAll(".userUI")[1].style.fontSize = "3.5vw"
+            document.querySelectorAll(".userUI")[0].style.height = "5vh"
+            document.querySelectorAll(".userUI")[1].style.height = "5vh"
         }
         let users;
         const socket = io.connect();
@@ -495,6 +497,9 @@
             if(e.target.innerHTML== "관리자"){
                 return 
             }
+            else if(e.target.innerHTML== "<%= data.nickName %>"){
+                return 
+            }
             else if( e.target.className == "use" && e.button == 2){
                 buttonText.style.position = 'absolute'; 
                 buttonText.style.left = x;
@@ -588,6 +593,8 @@
                 document.querySelector(".content").style.maxHeight = "100%"
                 document.querySelector(".content").style.border = "0"
                 document.querySelectorAll(".userUI")[1].style.fontSize = "3vw"
+                document.querySelectorAll(".userUI")[0].style.height = "3vh"
+                document.querySelectorAll(".userUI")[1].style.height = "3vh"
             }
             else{
                 document.querySelector(".content").style.width = "50vw"
