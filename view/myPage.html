@@ -4,13 +4,6 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- 리셋 css -->
-    <!-- <link rel="stylesheet" href="../css/reset.css"/> -->
-    <!-- 헤더 css -->
-    <!-- <link rel="stylesheet" href="../css/header.css"/> -->
-    <!-- <link rel="stylesheet" href="../css/myPage.css"/> -->
-    <!-- <link rel="stylesheet" href="../css/footer.css"/> -->
-    <!-- jquery -->
     <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
     <title>프로필 수정</title>
     <style>
@@ -22,7 +15,7 @@
             
         }
         body{
-            font-size: 1.5em;
+            font-size: 2vw;
             margin: 0;
             padding: 0;
             background-color: black;
@@ -32,7 +25,7 @@
         .filebox label {
             display: inline-block;
             padding: .5em .75em;
-            font-size: inherit;
+            /* font-size: inherit; */
             line-height: normal;
             vertical-align: middle;
             background-color: blue;
@@ -83,14 +76,14 @@
             text-align: center;
             position: relative;
             bottom: 13vh;
-            font-size: 2.6vh;
+            /* font-size: 2.6vh; */
         }
         .profilePicture{
             display: flex;
             align-items: center;
             position: relative;
             bottom: 5vh;
-            font-size: 2vh;
+            /* font-size: 2vh; */
         }
         .profilePictureText{
             margin-right: 2vh;
@@ -102,14 +95,11 @@
         .filebox > label{
             margin-left: 1vh;
         }
-        .profileName{
-            font-size: 2vh;
-        }
         .profileName > input{
             width: 13vw;
             min-width: 150px;
             padding: 0.5em;
-            font-size: 1vh;
+            /* font-size: 1vh; */
         }
         .profileBtn{
             position: relative;
@@ -120,7 +110,7 @@
             padding: 1vw;
             margin-right: 2vh;
             font-family: 'DungGeunMo';
-            font-size: 1.5vh;
+            font-size: 1.5vw;
             color: white;
             border: 0;
             background-color: blue;
@@ -160,6 +150,7 @@
     
 </body>
 <script>
+    
     if(window.innerWidth <= 850){
         document.querySelector(".main").style.width = "100%"
         document.querySelector(".main").style.maxWidth = "100%"
@@ -167,6 +158,10 @@
         document.querySelector(".main").style.maxHeight = "100vh"
         document.querySelector(".main").style.border = "0"
         // document.querySelectorAll(".userUI")[1].style.fontSize = "3vw"
+        document.querySelector("body").style.fontSize = "1.8vh"
+        document.querySelector(".profile").style.fontSize  = "3vh"
+        document.querySelectorAll("button")[0].style.fontSize  = "2vh"
+        document.querySelectorAll("button")[1].style.fontSize  = "2vh"
     }
     else{
         document.querySelector(".main").style.width = "50vw"
@@ -179,6 +174,7 @@
     const previewImage = document.getElementById("preview-image");
     let count = false;
     let nick = nickname.value;
+    let p = previewImage.src
     // 
         function readImage(input) {
         // 인풋 태그에 파일이 있는 경우
@@ -208,32 +204,81 @@
         }
     })
 
-    upload.onclick = function(e){
-        e.preventDefault();
-        imgUpload();
-    };
-    function imgUpload(){
-        let formdata = new FormData();
-        var file = document.querySelector('#input-image').files[0];  
-        formdata.append('file', file);	
-        formdata.append('nickname', nick);
-        formdata.append('chageNickname', nickname.value);
-        $.ajax({
-            url : '/myPage',
-            type : 'post',
-            processData: false,
-            contentType: false,
-            data : formdata,
-            success : function(data){
-                alert('적용되었습니다');
-                location.reload();
-            }
-        })
-    }
+    // upload.onclick = function(e){
+    //     e.preventDefault();
+    //     imgUpload();
+    // };
+    // function imgUpload(){
+    //     let formdata = new FormData();
+    //     var file = document.querySelector('#input-image').files[0];  
+    //     formdata.append('file', file);	
+    //     formdata.append('nickname', nick);
+    //     formdata.append('chageNickname', nickname.value);
+    //     $.ajax({
+    //         url : '/myPage',
+    //         type : 'post',
+    //         processData: false,
+    //         contentType: false,
+    //         data : formdata,
+    //         success : function(data){
+    //             alert('적용되었습니다');
+    //             location.reload();
+    //         }
+    //     })
+    // }
     // 적용 버튼 이미지 업로드 
     upload.onclick = function(e){
+        const a =["@","!","관리자","한결","겨리","섹","발","끼","병","신","년","놈","롬","븅","뵹","롬","럼","자지","보지","따","추","창희","순현"]
         e.preventDefault();
-        imgUpload();
+        if(previewImage.src !== p){
+            // alert("실행한다")
+            // const nickname = nickname.value
+            let bab = "가능"
+            console.log(nickname.value)
+            a.forEach(e => {
+                if(nickname.value.includes(e) || nickname.value.includes(" ")){
+                    return bab = "불가능"
+                }
+            });
+            if(bab == "불가능"){
+                alert("다른 닉네임으로 해주세요1")
+                return nickname.value = nick
+            }
+            else{  
+                imgUpload();
+            }
+        }
+        else{
+            // alert("닉네임 변경 실행한다")
+            
+            let bab = "가능"
+            // console.log(nickname.value)
+            // console.log(nick)
+            // console.log(bab)
+            a.forEach(e => {
+                if(nickname.value.includes(e) || nickname.value.includes(" ")){
+                    return bab = "불가능"
+                }
+            });
+            if(bab == "불가능"){
+                alert("다른 닉네임으로 해주세요2")
+                return nickname.value = nick
+            }
+            else{
+                $.ajax({
+                    url : '/nickname',
+                    type : 'post',
+                    data : {
+                        nickname : nickname.value,
+                        name : nick
+                            },
+                    success : function(data){
+                        alert('적용되었습니다');
+                        location.reload();
+                    }
+                })
+            }
+        }
     };
     function imgUpload(){
         let formdata = new FormData();

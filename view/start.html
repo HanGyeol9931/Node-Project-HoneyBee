@@ -140,14 +140,18 @@ button{
     top: 17%;
     left:50%;
     transform: translate(-50%,-50%);
-    width: 8vw;
-    height: 8vw;
-    background-color: red;
+    width: 10vh;
+    height: 10vh;
+    background-color: white;
     border: 3px solid white;
 }
 img{
-    width: 8vw;
-    height: 8vw;
+    position: relative;
+    top: 50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+    width: 10vh;
+    height: 10vh;
 }
 
 </style>
@@ -190,7 +194,7 @@ img{
         document.querySelector(".userBox").style.maxWidth = "1000px"
         document.querySelector(".userBox").style.height = "50vw"
         document.querySelector(".userBox").style.maxHeight = "600px"
-        document.querySelector(".userBox").style.border = "1px solid"
+        document.querySelector(".userBox").style.border = "3px solid"
         // document.querySelectorAll(".userUI")[1].style.fontSize = "1em"
     }
     page.onclick = ()=>{

@@ -142,6 +142,25 @@ app.post('/index',(req,res)=>{
         res.send(err);
     })
 });
+app.post("/nickname",(req,res)=>{
+  const {nickname , name} = req.body
+  console.log(nickname)
+  console.log(name)
+  User.update({  
+      nickName : nickname, 
+  },
+  {
+      where: {
+          nickName : name,
+      }
+  }
+  ).then((e)=>{
+      res.send('good');  
+  }).catch((err)=>{  
+      console.log(err);
+  });
+
+})
 //------------------------------------로그아웃-----------------------------------------------------
 app.get('/logout', (req,res)=>{
     res.clearCookie("user");
@@ -176,7 +195,9 @@ app.get("/chatting",(req,res)=>{
     .then((e)=>{
         res.render("chatting",{data : e});
     })
-    .catch
+    .catch(()=>{
+      res.redirect("/");
+    })
 })
 // socketio-------------------------
 const userArr = [];
