@@ -2,6 +2,7 @@
 <html lang="en" >
 <head>
   <meta charset="UTF-8">
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
   <title>로그인/회원가입페이지</title>
   <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css'>
 <link rel='stylesheet' href='https://unicons.iconscout.com/release/v2.1.9/css/unicons.css'><link rel="stylesheet" href="view/style.css">
@@ -11,9 +12,9 @@
 </head>
 <body>
 	
-	<a href="https://front.codes/" class="logo" target="_blank">
+	<!-- <a href="https://front.codes/" class="logo" target="_blank">
 		<img src="/logo/logo.png" alt="로고">
-	</a>
+	</a> -->
 
 	<div class="section">
 		<div class="container">
@@ -41,7 +42,7 @@
 												</div>
 												<button class="btn mt-4 submit" >꿀단지 로그인</button>
 											</form>
-                            				<p class="mb-0 mt-4 text-center"><a href="#0" class="link">비밀번호를 잊으셨나요?</a></p>
+                            				<p class="mb-0 mt-4 text-center"><a href="/view/findPw.html" class="link">비밀번호를 잊으셨나요?</a></p>
 				      					</div>
 			      					</div>
 			      				</div>
@@ -76,22 +77,21 @@
 	      	</div>
 	    </div>
 	</div>
-<!-- partial -->
-
 </body>
 <script>
+	// swal("경고","닉네임을 입력해주세요");
 	const a =["@","!","관리자","섹","발","끼","병","신","년","놈","롬","븅","뵹","롬","럼","자지","보지","따","추","창희","순현"]
 	signIn.onclick = ()=>{
          const nickname = nickName.value
 		 a.forEach(e => {
 			if(nickname.includes(e) || nickname.includes(" ")){
-				alert("다른 닉네임으로 해주세요");
+				swal("경고","다른 닉네임으로 해주세요");
 				nickname = ""
 			}
 		});
 		console.log(joinId.value)
          if(nickname == ""){
-            alert("닉네임을 입력해주세요")
+			swal("경고","닉네임을 입력해주세요");
          }
          else{
 			$.ajax({
