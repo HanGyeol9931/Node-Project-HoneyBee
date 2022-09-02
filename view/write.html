@@ -6,15 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>글쓰기</title>
 </head>
-<style>
+<style>                                                                                                   
     @font-face {
        font-family: 'DungGeunMo';
        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/DungGeunMo.woff') format('woff');
        font-weight: normal;
        font-style: normal;
    }
-   body{    
-        font-size: 2.5vw;
+   body{
+        font-size: 3vh;
        font-family: 'DungGeunMo';
        background-color: blue;
        color: white;
@@ -22,6 +22,12 @@
    h1{
        color: white;
        text-align: center;
+   }
+   input::placeholder{
+    color: white;
+   }
+   textarea::placeholder{
+    color: white;
    }
    .inputArea{
        width: 100%;
@@ -32,13 +38,22 @@
        margin-top: 30px;
    }
    .inputTitle{
-       width: 300px;
-       height: 20px;
-
+        font-family: 'DungGeunMo';
+        font-size: 2.3vh;
+        width: 60vw;
+        height: 8vh;
+        border: 2px solid white;
+        background-color: blue;
+        color: white;
    }
    .inputContent{
-       width: 300px;
-       height: 250px;
+        font-family: 'DungGeunMo';
+        font-size: 2.3vh;
+        width: 60vw;
+        height: 50vh;
+        border: 2px solid white;
+        background-color: blue;
+        color: white;
    }
    .submitArea{
        display: flex;
@@ -48,9 +63,10 @@
    }
    .submitBtn, .returnBtn{
        font-family: 'DungGeunMo';
+       font-size: 2vh;
        cursor: pointer;
-       width: 100px;
-       height: 30px;
+       width: 20vh;
+       height: 5vh;
        border: 1px solid white;
        border-radius: 2px;
        color: white;
@@ -68,8 +84,8 @@
 <hr>
 <form action="/write" method="POST">
     <div class="inputArea">
-       <input type="text" class="inputTitle" name="title"><br>
-       <input type="text" class="inputContent" name="content">
+       <input type="text" class="inputTitle" name="title" maxlength="15" placeholder="제목을 입력하세요(15자 이내)"/><br>
+       <textarea class="inputContent" name="content" placeholder="내용을 입력하세요"></textarea>
     </div>
     <div class="submitArea">
         <button class="submitBtn" type="submit">완료</button>

@@ -15,7 +15,7 @@
        font-style: normal;
    }
    body{
-    font-size: 2.5vw;
+        font-size: 3vh;
        font-family: 'DungGeunMo';
        background-color: blue;
        color: white;
@@ -24,13 +24,14 @@
        color: white;
        text-align: center;
    }
-   input{
-    font-family: 'DungGeunMo';
-    border: 2px solid white;
-    background-color: blue;
+   input::placeholder{
+    color: white;
+   }
+   textarea::placeholder{
     color: white;
    }
    .inputArea{
+        
        width: 100%;
        display: flex;
        justify-content: center;
@@ -39,31 +40,42 @@
        margin-top: 30px;
    }
    .editTitle{
-       width: 300px;
-       height: 20px;
+        font-family: 'DungGeunMo';
+        font-size: 2.3vh;
+        width: 60vw;
+        height: 8vh;
+        border: 2px solid white;
+        background-color: blue;
+        color: white;
    }
    .editContent{
-       width: 300px;
-       height: 250px;
+        font-family: 'DungGeunMo';
+        font-size: 2.3vh;
+        width: 60vw;
+        height: 50vh;
+        border: 2px solid white;
+        background-color: blue;
+        color: white;
    }
    .submitArea{
        display: flex;
        justify-content: center;
        align-items: center;
-       margin-top: 10px;
+       margin-top: 3vh;
    }
-   .submitBtn, .returnBtn{
+   #submitBtn, .returnBtn{
        font-family: 'DungGeunMo';
+       font-size: 2vh;
        cursor: pointer;
-       width: 100px;
-       height: 30px;
+       width: 20vh;
+       height: 5vh;
        border: 1px solid white;
        border-radius: 2px;
        color: white;
        background-color: blue;
        margin: 0 5px;
    }
-   .submitBtn:hover, .returnBtn:hover {
+   #submitBtn:hover, .returnBtn:hover {
        border-radius: 2px;
        color: blue;
        background-color: white;
@@ -74,8 +86,8 @@
 <hr>
 <form action="/edit/<%=postID%>" method="post">
     <div class="inputArea">
-        <input type="text" name="title" class="editTitle" /><br>
-        <input type="textarea" name="content" class="editContent" />
+        <input type="text" name="title" class="editTitle" maxlength="15" placeholder="제목을 입력하세요(15자 이내)"/><br>
+        <textarea name="content" class="editContent" placeholder="내용을 입력하세요"></textarea>
     </div>   
     <div class="submitArea">
         <button type="submit" id="submitBtn">수정 완료</button>                                                                             

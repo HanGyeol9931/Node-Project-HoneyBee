@@ -422,6 +422,7 @@ app.get("/reply/:id",(req,res) => {
 app.post("/reply/:id", (req, res) => {
   let postID = req.params.id;
   const name = req.session.nickname;
+  console.log(name);
   const { replyContent } = req.body;
   if(replyContent === ''){
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
