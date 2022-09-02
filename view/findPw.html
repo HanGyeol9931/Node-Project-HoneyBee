@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" />
+    <title>비밀번호찾기</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+</head>
+<style>
+    @font-face {
+        font-family: 'DungGeunMo';
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/DungGeunMo.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+        
+    }
+    body{
+        font-family: 'DungGeunMo';
+        font-weight: bold;
+        /* body 기준으로 움직이려고 relative */
+        position: relative;
+        height: 100vh;
+        overflow: hidden;
+        margin: 0;
+        box-sizing: border-box;
+        background-color: black;
+        color: white;
+    }
+    .content{
+        background-color: blue;
+        /* border-radius: 8px; */
+        position: absolute;
+        /* 무족건 무슨일이 있어도 정중앙 */
+        top: 50%;
+        left:50%;
+        transform: translate(-50%,-50%);
+        width: 50vw;
+        height: 50vw;
+        min-width: 250px;
+        min-height: 250px;
+        max-width: 1000px;
+        max-height: 600px;
+        border: 3px solid;
+        
+    }
+    #main{
+        display: block;
+        overflow: scroll;
+        /*  */
+        font-size:1em;
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+    }
+    #main::-webkit-scrollbar {
+        display: none;
+    }
+    .title{
+        font-size:1em;
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        border-bottom: 3px solid white;
+        height: 30px;
+    }
+    #userBox{
+        background-color: blue;
+        /* border-radius: 8px; */
+        position: absolute;
+        display: none;
+        text-align: center;
+        border: 3px solid;
+        border-left: 0;
+        width:20vw;
+        height:50vw;
+        max-width: 200px;
+        max-height: 600px;
+        word-break: break-all;
+        min-width: 150px;
+        min-height: 300px;
+    }
+    #userBoxUI::-webkit-scrollbar {
+        display: none;
+    }
+    #userBoxUI{
+        padding: 5px 10px;
+        list-style: none;
+        overflow: auto;
+    }
+    .secretTo{
+        background-color: orange;
+    }
+    .secretFrom{
+        background-color: green;
+    }
+    .admin_text{
+        background-color: black;
+        color: aliceblue;
+        text-decoration: bold;
+    }
+    .adminJoin_text{
+        background-color: black;
+        text-decoration: bold;
+    }
+    #buttonText{
+        display: none;
+        position:absolute;
+        z-index: 1;
+        border: 3px solid #e5e5e5;
+        background-color: blue;
+        width: 130px;
+        font-size: 1em
+        /* border-radius: 8px; */
+    }
+    .userText{
+        padding: 5px;
+        margin: 5px;
+    }
+    .userText:hover{
+        background-color: white;
+        color: blue;
+        border-radius: 3px;
+    }
+    #stopText{
+        display: none;
+    }
+    
+    #messages > li{
+        display: flex;
+        align-items: center;
+        /* height: 25px; */
+    }
+    input:focus {
+        outline: none;
+    }
+    .swal-modal{
+        border: 3px solid white;
+        background-color: blue ;
+        color: white ;
+    }
+    .swal-title {
+        color: white;
+    }
+    .swal-text {
+        color: white;
+    }
+    .swal-footer {
+        color: white;
+    }
+    .swal-button {
+        background-color: blue;
+        color: white;
+    }
+    .swal-button:not([disabled]):hover {
+        background-color: white;
+        color: blue;
+    }
+    #userBoxUI > .use{
+        border-bottom: 3px solid;
+        padding: 10px 0 10px 0;
+    }
+    #userBoxUI > .use:first-child{
+        border-bottom: 3px solid;
+        /* border-top: 1px solid; */
+        padding: 5px 0 10px 0 ;
+    }
+    /* 새로 추가한 css부분 */
+    .complaint{
+        width: 20%;
+        text-align: center;
+    }
+    .complainted{
+        width: 20%;
+        text-align: center;
+    }
+    .complaintContents{
+        width: 50%;
+        text-align: center;
+    }
+    .select{
+        width: 10%;
+        text-align: center;
+    }
+    h1{
+        text-align: center;
+        padding-top: 5%;
+    }
+</style>
+<body>
+    <h1>비밀번호 찾기</h1>
+    <div class="content">
+        <div class="title">
+            <div class = "complaintContents">비밀번호는 닉네임, 아이디를 통해 찾을 수 있습니다.<span></span></div>
+        </div>
+        <div id="main">
+            
+        </div>
+    </div>
+</body>
+<script>
+</script>
+</html>
