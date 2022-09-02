@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" />
-    <title>비밀번호찾기</title>
+    <title>비밀번호재설정</title>
     <script src="/socket.io/socket.io.js"></script>
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
@@ -49,6 +49,7 @@
     #main{
         display: block;
         overflow: scroll;
+        /*  */
         font-size:1em;
         width: 100%;
         /* display: flex; */
@@ -204,37 +205,32 @@
     min-height: 5vh;
     width: 100%;
     font-weight: 500; */
-     }
+    }
     .mt2{
-    margin-top: 0.5rem!important;
+        margin-top: 0.5rem!important;
     }
 </style>
 <body>
-    <h1>비밀번호 찾기</h1>
+    <h1>비밀번호 재설정</h1>
     <div class="content">
-        <form action="/findPw" method="post">
-            <div class="title">
-                <div class = "complaintContents">비밀번호는 닉네임, 아이디를 통해 찾을 수 있습니다.<span></span></div>
-                <div id = "home">로그인창으로</div>
+        <div class="title">
+            <div class = "complaintContents">비밀번호를 재설정해주세요.<span></span></div>
+            <div id = "home">로그인창으로</div>
+        </div>
+        <div id="main">
+            <div class="">
+                비밀번호&nbsp;&nbsp;&nbsp;&nbsp; :  <input type="text" name="userId" class="form-style" placeholder="아이디" id="userId" autocomplete="off" >
             </div>
-            <div id="main">
-                <div class="">
-                    아이디 :  <input type="text" name="userId" class="form-style" placeholder="아이디" id="userId" autocomplete="off" >
-                </div>
-                <div class="">
-                    닉네임 : <input type="text" name="nickName" class="form-style mt2" placeholder="비밀번호" id="nickName"  >
-                </div>
-                <button class ="btn" id="findPw" type="button">비 밀 번 호 찾 기</button>
+            <div class="">
+                비밀번호확인 : <input type="text" name="userPassword" class="form-style mt2" placeholder="비밀번호" id="userPassword"  >
             </div>
-        </form>
+            <button id="upload" type="button" class="btn">재 설 정 클 릭</button>
+        </div>
     </div>
 </body>
 <script>
     home.onclick = () => {
         location.href = "/index"
     }
-
-   // findPw.onclick =
-
 </script>
 </html>

@@ -161,6 +161,53 @@ app.post("/nickname",(req,res)=>{
   });
 
 })
+// ---------------아이디랑 닉네임을 비교해서 일치하면 비밀번호 재설정페이지로 옮겨주는부분--------
+app.post('/findPw',(req,res)=>{    
+  const userid = req.body.userId;
+  const nickname = req.body.nickName;
+  User.findOne({
+      raw : true,
+      where : {userId:userid},
+  }).then((e)=>{ // findOne을해서 담은 정보를 e에 넣음
+      if((userid && nickname) == ""){ // 유저아이디와 패스워드가 공란이라면 
+          res.send('<script type="text/javascript">alert("아이디와 닉네임을 입력해주세요."); location.href="/";</script>');
+      } else if(e===null){
+          res.send('<script type="text/javascript">alert("없는정보입니다"); location.href="/";</script>');
+      }
+      else{ // 성공시
+         compare(userid, nickname, (err, same) => {
+              if(same){
+                  //req.session.nickname = e.nickName;
+                  res.render('rePw', {data:e});
+              }
+              else{
+                  res.send('<script type="text/javascript">alert("아이디와 닉네임이 일치하지 않습니다."); window.location.href="/findPw";</script>');
+              }
+          })
+      }
+  }).catch((err)=>{
+      res.send(err);
+  })
+});
+
+// app.post("/nickname",(req,res)=>{
+// const {nickname , name} = req.body
+// User.update({  
+//     nickName : nickname, 
+// },
+// {
+//     where: {
+//         nickName : name,
+//     }
+// }
+// ).then((e)=>{
+//     res.send('good');  
+// }).catch((err)=>{  
+//     console.log(err);
+// });
+
+// })
+
 //------------------------------------로그아웃-----------------------------------------------------
 app.get('/logout', (req,res)=>{
     res.clearCookie("user");
