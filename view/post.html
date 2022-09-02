@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= Post.title %></title>
+    <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+</head>
+<style>
+    @font-face {
+        font-family: 'DungGeunMo';
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/DungGeunMo.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+    }   
+
+    body {
+        font-family: 'DungGeunMo';
+        background-color: blue;
+        color: white;
+        padding: 15px;
+    }
+    ::-webkit-scrollbar {
+        display: none;
+    }
+    /* 게시글 부분 */
+    .postArea{
+        font-size: 2.5vw;
+    }
+
+    h1 {
+        color: white;
+        text-align: center;
+    }
+
+    .btnBox > button,  .btnBox > form > button {
+        font-family: 'DungGeunMo';
+        font-size: 2.2vw;
+        cursor: pointer;
+        width: 15vw;
+        height: 8vh;
+        border: 2px solid white;
+        border-radius: 10px;
+        color: white;
+        background-color: blue;
+    }
+    .btnBox {
+        display: flex;
+    } 
+    button:hover {
+        border-radius: 2px;
+        color: blue;
+        background-color: white;
+    }
+    
+    .PostInfo {
+        display: flex;
+        justify-content: space-between;
+    }
+    /* 댓글 부분 */
+    .replyArea{
+        font-size: 2vw;
+    } 
+    .areaTitle{
+        display: inline-block;
+        margin: 2px 0 5px 0;
+    }
+    .firstRaw {
+        display: flex;
+        justify-content: flex-start;
+    }
+    .inputContent {
+        font-family: 'DungGeunMo';
+        border: none;
+        border-radius: 5px;
+        width: 60vw;
+        height: 10vh;
+        margin: 10px;
+    }
+    .btnBox {
+        display: flex;
+        align-items: center;
+    }
+    .replyBox{
+        width: 200px;
+        height: 50px;
+        border: 1px solid white;
+        margin-bottom: 1.5vh;
+    }
+    #deletePost, #editPost {
+        display : none;
+    }
+    .list{
+        margin-right: 1.5vw;
+    }
+    .list:first-child{
+        margin-left: 0.5vw;
+    }
+    .deleteReply{
+        display : none;
+    }    
+    a {
+        font-family: 'DungGeunMo';
+        text-decoration: none;
+        color: white;
+    }
+</style>
+<body>
+<div class="postArea">
+    <form action="/board/<%=Post.postId%>" method="post">
+        <h1>
+            <%= Post.title %>
+        </h1>
+        <hr>
+        <div class="PostInfo">
+            <div>작성자 : <%= Post.writer %>
+            </div>
+            <div>작성일 : <%= Post.createdAt %>
+            </div>
+        </div>
+        <p>
+            <%= Post.content %>
+        </p>
+    </form>
+
+    <div class="btnBox">
+        <button class="list" onclick="location.href='/board'">목록으로</button>
+        <form action="/edit/<%=Post.postId%>" method="get">
+            <button class="list" type="submit" id="editPost">수정</button>
+        </form>
+        <form action="/del/<%=Post.postId%>" method="get">
+            <button class="list" type="submit" id="deletePost">삭제</button>
+        </form>
+    </div>
+</div>
+
+<hr>
+
+<div class="replyArea">
+    <form action="/reply/<%=Post.postId%>" method="post">
+        <span class="areaTitle">댓글</span>
+        <div class="firstRaw">
+            <input class="inputContent" type="text" name="replyContent">
+            <button id="saveReply" type="submit">등록</button>
+        </div>
+    </form>
+    <% Reply.forEach(el => { %>
+    <div class="replyBox">
+        <span>
+            닉네임 : <span class="userNameReply"><%= el.writer %></span>
+        </span>
+        <br>
+        <span>
+            댓글 :  <%= el.content %>
+        </span>
+        <a href="/del_reply/<%= el.replyId %>/<%=Post.postId%>" class="deleteReply">삭제</a>
+    </div>
+    <% }) %>
+</div>
+    
+    
+</body>
+<script>
+    window.onload = function(){
+       
+        if('<%=Post.writer%>' =='<%= User %>' ){
+            deletePost.style.display = "block"
+            editPost.style.display = 'block'
+        } 
+        document.querySelectorAll(".replyBox").forEach((e)=>{
+            if(e.children[0].children[0].innerHTML == '<%= User %>' ){
+                e.children[3].style.display = "block"
+            }
+        })
+    }
+</script>
+</html>
