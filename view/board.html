@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시판</title>
+    <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+</head>
+<style>
+    @font-face {
+        font-family: 'DungGeunMo';
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/DungGeunMo.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+    }
+    body{
+        font-size: 2.5vw;
+        font-family: 'DungGeunMo';
+        background-color: blue;
+        color: white;
+    }
+    h1{
+        color: white;
+        text-align: center;
+    }
+    a{
+        font-family: 'DungGeunMo';
+        text-decoration: none;
+        color: white;
+    }
+    .navBar{
+        display: flex;
+        justify-content: space-evenly;
+        margin: 2vh 0;
+    }
+    
+    table, tr, td{
+        text-align: center;
+    }
+    .tableBox{
+        width: 100vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .mainRaw td{
+        padding: 0 50px;
+    }
+</style>
+<body>
+<h1>자유게시판</h1>
+<hr>
+<div class="navBar">
+    <span class="showUser"></span>
+    <a class="writePost" href="/write">글쓰기</a>
+    <a class="goMain" href="/index">메인페이지</a>
+</div>
+<hr>
+<div class="tableBox">
+    <table id="table">
+        <tr class="mainRaw">
+            <td>번호</td>
+            <td>제목</td>
+            <td>작성자</td>
+            <td>작성일</td>
+        </tr>
+    </table>
+</div>
+</body>
+<script src="/static/js/board.js"></script>
+<script>
+    const showUser = document.querySelector('showUser')
+    showUser.innerHTML = "writer"
+</script>
+</html>

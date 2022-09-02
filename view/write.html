@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>글쓰기</title>
+</head>
+<style>
+    @font-face {
+       font-family: 'DungGeunMo';
+       src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/DungGeunMo.woff') format('woff');
+       font-weight: normal;
+       font-style: normal;
+   }
+   body{    
+        font-size: 2.5vw;
+       font-family: 'DungGeunMo';
+       background-color: blue;
+       color: white;
+   }
+   h1{
+       color: white;
+       text-align: center;
+   }
+   .inputArea{
+       width: 100%;
+       display: flex;
+       justify-content: center;
+       flex-direction: column;
+       align-items: center;
+       margin-top: 30px;
+   }
+   .inputTitle{
+       width: 300px;
+       height: 20px;
+
+   }
+   .inputContent{
+       width: 300px;
+       height: 250px;
+   }
+   .submitArea{
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       margin-top: 10px;
+   }
+   .submitBtn, .returnBtn{
+       font-family: 'DungGeunMo';
+       cursor: pointer;
+       width: 100px;
+       height: 30px;
+       border: 1px solid white;
+       border-radius: 2px;
+       color: white;
+       background-color: blue;
+       margin: 0 5px;
+   }
+   .submitBtn:hover, .returnBtn:hover {
+       border-radius: 2px;
+       color: blue;
+       background-color: white;
+   }
+</style>
+<body>
+<h1>글쓰기</h1>
+<hr>
+<form action="/write" method="POST">
+    <div class="inputArea">
+       <input type="text" class="inputTitle" name="title"><br>
+       <input type="text" class="inputContent" name="content">
+    </div>
+    <div class="submitArea">
+        <button class="submitBtn" type="submit">완료</button>
+        <button class="returnBtn" onclick="location.href='/board'">취소</button>
+    </div>
+</form>
+</body>
+</html>
