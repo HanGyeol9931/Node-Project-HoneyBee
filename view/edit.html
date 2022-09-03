@@ -86,22 +86,13 @@
 <hr>
 <form action="/edit/<%=postID%>" method="post">
     <div class="inputArea">
-        <input type="text" name="title" class="editTitle" maxlength="15" placeholder="제목을 입력하세요(15자 이내)"/><br>
+        <input type="text" name="title" class="editTitle" maxlength="15"/><br>
         <textarea name="content" class="editContent" placeholder="내용을 입력하세요"></textarea>
     </div>   
     <div class="submitArea">
-        <button type="submit" id="submitBtn">수정 완료</button>                                                                             
-        <button class="returnBtn" onclick="location.href='/board'">취소</button>                                                                             
+        <button type="submit" id="submitBtn">수정 완료</button>                                                                           
+        <button type="button" class="returnBtn" onclick="location.href='/board'">취소</button>                                                                             
     </div>
 </form>
 </body>
-<script>
-    window.onload = function(){
-        submitBtn.onclick = ()=>{
-            if(editTitle.value === "" || editContent.value === ""){
-                alert("내용을 입력해주세요")
-            } else {
-                alert("수정 완료")
-            }}}
-</script>
 </html>

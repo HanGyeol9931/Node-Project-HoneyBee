@@ -188,18 +188,17 @@
     </div>
     <% }) %>
 </div>
-    
-    
 </body>
 <script>
     window.onload = function(){
+        console.log('<%= User.nickname %>' )
        
-        if('<%=Post.writer%>' =='<%= User %>' ){
+        if('<%=Post.writer%>' =='<%= User.nickname %>' || '<%=User.authority%>' == '관리자'){
             deletePost.style.display = "block"
             editPost.style.display = 'block'
         } 
         document.querySelectorAll(".replyBox").forEach((e)=>{
-            if(e.children[0].children[0].innerHTML == '<%= User %>'){
+            if((e.children[0].children[0].innerHTML == '<%= User.nickname %>')){
                 e.children[0].children[1].style.display = "block"
             }
          })
