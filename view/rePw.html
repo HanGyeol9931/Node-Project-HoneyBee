@@ -209,28 +209,43 @@
     .mt2{
         margin-top: 0.5rem!important;
     }
+    .complaintContents > input {
+        display: none;
+    }
 </style>
 <body>
+    <form action="repw" method="post" >
     <h1>비밀번호 재설정</h1>
     <div class="content">
         <div class="title">
-            <div class = "complaintContents">비밀번호를 재설정해주세요.<span></span></div>
+            <div class = "complaintContents"><input type="text" name="name" value="<%=data.nickName%>"> <%=data.nickName%>님 비밀번호를 재설정해주세요.</div>
             <div id = "home">로그인창으로</div>
         </div>
         <div id="main">
-            <div class="">
-                비밀번호&nbsp;&nbsp;&nbsp;&nbsp; :  <input type="text" name="userId" class="form-style" placeholder="아이디" id="userId" autocomplete="off" >
-            </div>
-            <div class="">
-                비밀번호확인 : <input type="text" name="userPassword" class="form-style mt2" placeholder="비밀번호" id="userPassword"  >
-            </div>
-            <button id="upload" type="button" class="btn">재 설 정 클 릭</button>
+            
+                <div class="">
+                    비밀번호&nbsp;&nbsp;&nbsp;&nbsp; :  <input type="password" name="userPassword" class="form-style" id="pwd" >
+                </div>
+                <div class="">
+                    비밀번호확인 : <input type="password" name="userPassword" class="form-style mt2" id="repwd" >
+                </div>
+                <button id="upload" type="submit" class="btn" >재설정하세요 클 릭</button>
+             
         </div>
     </div>
+</form>
 </body>
 <script>
     home.onclick = () => {
         location.href = "/index"
+    }
+
+    function joinform_check() {
+        if (repwd.value !== pwd.value) {
+          alert("비밀번호가 일치하지 않습니다..");
+          return false;
+        };
+        document.join_form.submit();
     }
 </script>
 </html>
