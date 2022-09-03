@@ -32,6 +32,7 @@
         
     }
     .content{
+        /* display: none; */
         background-color: blue;
         /* border-radius: 8px; */
         position: absolute;
@@ -190,6 +191,12 @@
     input:focus {
         outline: none;
     }
+    textarea:focus {
+        outline: none;
+    }
+    textarea::-webkit-scrollbar {
+        display: none;
+    }
     .swal-modal{
         border: 3px solid white;
         background-color: blue ;
@@ -207,6 +214,13 @@
     .swal-button {
         background-color: blue;
         color: white;
+    }
+    .swal-button:focus{
+        border: 0;
+        /* outline:0; */
+        background-color: blue;
+        color: white;
+        box-shadow: none;
     }
     .swal-button:not([disabled]):hover {
         background-color: white;
@@ -236,9 +250,106 @@
         /* border-top: 1px solid; */
         padding: 5px 0 10px 0 ;
     }
+    .complaint{
+        display: none;
+        width: 100vw;
+        height: 100vh;
+        /* border: 3px solid white; */
+        background-color: blue;
+        position: absolute;
+        /* 무족건 무슨일이 있어도 정중앙 */
+        top: 50%;
+        left:50%;
+        transform: translate(-50%,-50%);
+    }
+    .complaintTitle{
+        text-align: center;
+        position: absolute;
+        /* 무족건 무슨일이 있어도 정중앙 */
+        top: 50%;
+        left:50%;
+        transform: translate(-50%,-50%);
+    }
+    .contentTitle{
+        font-size: 10vh;
+        position: relative;
+        bottom: 70px;
+    }
+    #complaintUser{
+        font-size: 3vw;
+        position: relative;
+        bottom: 30px;
+    }
+    #complaintedUser{
+        font-size: 3vw;
+        position: relative;
+    }
+    .contentText{
+        position: relative;
+        top: 40px;
+    }
+    #complaintContents{
+        padding: 13px;
+        margin-bottom: 25px;
+    }
+    #complaintedBtn{
+        font-size: 3vh;
+        border:  0;
+        padding: 10px;
+        background-color: blue;
+        color: white;
+        font-family: 'DungGeunMo';
+    }
+    #complaintedBtn:hover{
+        background-color: white;
+        color: blue;
+    }
+    #backBtn{
+        font-size: 3vh;
+        border:  0;
+        padding: 10px;
+        background-color: blue;
+        color: white;
+        font-family: 'DungGeunMo';
+    }
+    #backBtn:hover{
+        background-color: white;
+        color: blue;
+    }
+    textarea{
+        font-family: 'DungGeunMo';
+        font-size: 2vw;
+        border: 3px solid white;
+        background-color: blue;
+        color: white;
+        width: 30vw;
+        height: 10vh;
+        max-width: 50vw;
+        min-width: 10vw;
+        max-height: 20vw;
+        min-height: 10vw;
+    }
+    .btnStyle{
+        width: 100%;
+    }
     
 </style>
 <body>
+    <div class="complaint">
+        <div class="complaintTitle">
+            <div class="contentTitle">※ 신고 ※</div>
+            <div id="complaintUser"></div>
+            <div id="complaintedUser"></div>
+            <div class="contentText">
+                <textarea name="complaintContents" id="complaintContents" cols="30" rows="5"></textarea>
+                <div class="btnStyle">
+                    <button id="backBtn">돌아가기</button>
+                    <button id="complaintedBtn">신고하기</button>
+                </div>
+                
+            </div>
+        </div>
+    </div>
     <div id="buttonText">
         <div class="userText a"></div>
         <div class="userText b"></div>
@@ -278,6 +389,75 @@
 <script>
 
      window.onload = function(){
+        complaintedBtn.onclick = ()=>{
+            console.log(complaintContents.value)
+            let a = complaintUser.innerHTML.split(": ")
+            let b = complaintedUser.innerHTML.split(": ")
+            swal({
+                title : "신고",
+                text : "정말 신고하시겠습니까?",
+                buttons: ["네" , "아니요"]
+            })
+            .then(function(result){
+                if(result == null){
+                    $.ajax({
+                        url : "/userComplaint",
+                        type : "post",
+                        data : {
+                            complaintUser : a[1],
+                            complaintedUser : b[1],
+                            complaintContents : complaintContents.value
+                        },
+                        success : function(data){
+                            if (data !== null)
+                            {  
+                                swal({
+                                    title : "안내",
+                                    text : "성공적으로 접수돠었습니다.",
+                                })
+                                complaintContents.value = ""
+                                document.querySelector(".content").style.display = "block"
+                                document.querySelector(".complaint").style.display = "none"
+                                return 
+                            }
+                            else{
+                                complaintContents.value = ""
+                                return alert("bad")
+                            }
+                        }
+                    })
+                }
+                else{
+                    complaintContents.value = ""
+                    return
+                }
+            })
+        }
+        backBtn.onclick = ()=>{
+            swal({
+                title : "채팅방",
+                text : "정말 돌아가시겠습니까?",
+                buttons: ["네" , "아니요"]
+            })
+            .then(function(result){
+                if(result == null){
+                    document.querySelector(".content").style.display = "block"
+                    document.querySelector(".complaint").style.display = "none"
+                    complaintContents.value = ""
+                }
+                else{
+                    complaintContents.value = ""
+                    return
+                }
+                console.log(result);
+
+                
+                // if(result){
+                //     location.href = "/";
+                // }
+                
+            })
+        }
         if("<%=data.authority%>" == "관리자"){
             console.log("나는 관리자")
             userName.innerHTML = "관리자"
@@ -470,7 +650,11 @@
                 alert("아직 준비 중입니다.")
             }
             else if(e.target.className == "userText c"){
-                alert("아직 준비 중입니다.")
+                complaintUser.innerHTML = `※ 일 름 보 : <%=data.nickName%>`
+                complaintedUser.innerHTML = `※ 문 제 아 : ${e.target.children[0].innerHTML}`
+                document.querySelector(".content").style.display = "none"
+                document.querySelector(".complaint").style.display = "block"
+                userBox.style.display = "none"
             }
             else if(e.target.id == "stopText"){
                 $.ajax({

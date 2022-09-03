@@ -9,7 +9,7 @@ const cookie = require("cookie-parser")
 const socketio = require("socket.io")
 const session = require("express-session");
 const FileStore = require("session-file-store")(session);
-const { sequelize, User, Post, Reply } = require("./model");
+const { sequelize, User, Post, Reply , Complaint } = require("./model");
 const { Script } = require("vm");
 const app = express(); // express 설정1
 // 서버 연결-------------------------------------------------
@@ -107,7 +107,37 @@ app.get("/index", (req,res)=>{
         res.redirect("/")
     })
 });
-
+app.get("/complaint",(req,res)=>{
+  Complaint.findAll({
+    raw : true
+  })
+  .then((e)=>{
+    res.render("complaint",{data:e})
+    // console.log(e)
+  })
+})
+app.post("/userComplaint",(req,res)=>{
+  const {complaintUser , complaintedUser ,complaintContents} = req.body
+  User.findOne({
+    where : {nickName : complaintUser}
+  })
+  .then((e)=>{
+     if(e== null){
+       return
+     }
+     else{
+       Complaint.create({
+        complaintUser: complaintUser,
+        complaintedUser: complaintedUser,
+        complaintContents: complaintContents,
+       })
+       .then(()=>{
+         res.send("good")
+         return
+       })
+     }
+  })
+})
 
 //------------------------------로그인 및 쿠키 생성--------------------------------------------
 app.post('/index',(req,res)=>{    

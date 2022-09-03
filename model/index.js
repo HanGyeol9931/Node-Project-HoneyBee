@@ -6,6 +6,7 @@ const config = require('../config/config');
 const User = require('./users');
 const Post = require('./posts');
 const Reply = require('./replies');
+const Complaint = require("./complaints");
 //const MyPage = require('./mypage');
 
 // 시퀄라이즈 객체 생성 옵션을 적용한 객체 만들어 놓는다. 
@@ -24,16 +25,19 @@ db.sequelize = sequelize;
 db.User = User;
 db.Post =Post;
 db.Reply =Reply;
+db.Complaint =Complaint;
 //db.MyPage = MyPage;
 
 // 이 구문이 없으면 테이블이 생성되지 않는다.
 User.init(sequelize);
 Post.init(sequelize)
 Reply.init(sequelize)
+Complaint.init(sequelize)
 
 User.associate(db);
 Post.associate(db);
 Reply.associate(db);
+Complaint.associate(db);
 //MyPage.init(sequelize);
 //관계형 맺어주는 함수 사용
 //User.associate(db);

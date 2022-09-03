@@ -58,6 +58,7 @@ class User extends Sql.Model{
     // 1:N (foreignkey) 외래키
     static associate(db){
         db.User.hasMany(db.Post, { foreignKey : "writer", sourceKey : "nickName" });
+        db.User.hasMany(db.Complaint, { foreignKey : "complaintUser", sourceKey : "nickName" });
     }
 }
 
