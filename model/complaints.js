@@ -32,7 +32,7 @@ class Complaint extends Sql.Model{ // static init 메서드에서 테이블을 �
         );
     }
     // 1:N (foreignkey) 외래키
-    static associate(db){
+    static render(db){
         // 1:N 관계(hasMany, belongTo)
         // 시퀄라이즈에서 1:N 관계를 hasMany 함수로 정의를 한다.
         // hasMany 함수를 이용해서 테이블의 관계를 정의해준다. // 첫번째 매개변수로 연결할 테이블 

@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>바로가기페이지</title>
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
 </head>
 <style>
     @font-face {
@@ -62,7 +64,7 @@
     font-family: "DungGeunMo";
     color:white;
     width: 50vw;
-    height: 50vh;
+    height: 55vw;
     min-width: 280px;
     max-width: 700px;
     background-color: blue;
@@ -144,15 +146,61 @@ button{
     height: 10vh;
     background-color: white;
     border: 3px solid white;
+    max-width: 100px;
+    max-height: 100px;
 }
 img{
     position: relative;
     top: 50%;
     left:50%;
+    max-width: 100px;
+    max-height: 100px;
+
     transform: translate(-50%,-50%);
     width: 10vh;
     height: 10vh;
+    max-width: 100px;
+    max-height: 100px;
 }
+#hideContent{
+    display: none;
+    padding: 10px;
+}
+#hideContent:hover{
+    background-color: white;
+    color: blue;
+    
+}
+.swal-modal{
+    border: 3px solid white;
+    background-color: blue ;
+    color: white ;
+}
+.swal-title {
+    color: white;
+}
+.swal-text {
+    color: white;
+}
+.swal-footer {
+    color: white;
+}
+.swal-button {
+    background-color: blue;
+    color: white;
+}
+.swal-button:focus{
+    border: 0;
+    /* outline:0; */
+    background-color: blue;
+    color: white;
+    box-shadow: none;
+}
+.swal-button:not([disabled]):hover {
+    background-color: white;
+    color: blue;
+}
+    
 
 </style>
 <body>
@@ -169,6 +217,7 @@ img{
             <div class="mypage">
                 <button id="page" name="page">마이페이지</button> 
                 <span id="logout">로그아웃</span>
+                <span id="hideContent">신고내역</span>
             </div>
             <div class="tilte">
                 <span class="tilteContent"><a href="/board">게시판</a></span>
@@ -178,41 +227,63 @@ img{
     </div>
 </body>
 <script>
-    logout.onclick = ()=>{
-        location.href = "/logout"
-    }
-    if(window.innerWidth <= 850){
-        document.querySelector(".userBox").style.width = "100%"
-        document.querySelector(".userBox").style.maxWidth = "100%"
-        document.querySelector(".userBox").style.height = "100%"
-        document.querySelector(".userBox").style.maxHeight = "100%"
-        document.querySelector(".userBox").style.border = "0"
-        // document.querySelectorAll(".userUI")[1].style.fontSize = "3vw"
-    }
-    else{
-        document.querySelector(".userBox").style.width = "50vw"
-        document.querySelector(".userBox").style.maxWidth = "1000px"
-        document.querySelector(".userBox").style.height = "50vw"
-        document.querySelector(".userBox").style.maxHeight = "600px"
-        document.querySelector(".userBox").style.border = "3px solid"
-        // document.querySelectorAll(".userUI")[1].style.fontSize = "1em"
-    }
-    page.onclick = ()=>{
-        $.ajax({
-                url : "/mypage",
-                type : "get",
-                success : function(data){
-                    if (data)
-                    { 
-                        // console.log(data)
-                        location.href = "/mypage"
-                        return 
-                    }
-                    else{
-                        return 
-                    }
-                }
+    window.onload = ()=>{
+        const socket = io.connect();
+        socket.emit("messagejoin","<%= data.nickName %>");
+        socket.on("userStop",(name)=>{
+            swal("안내",`${name}님이 정지 처리 되었습니다.`)
+        })
+        socket.on("userReturn",()=>{
+            swal("안내",`신고가 반려되었습니다.`)
+        })
+        socket.on("stopMsg",()=>{
+            swal("안내","신고로 인해 정지 되셨습니다.")
+            .then(()=>{
+                location.href = "/"
             })
+        })
+        logout.onclick = ()=>{
+            location.href = "/logout"
+        }
+        hideContent.onclick = ()=>{
+            location.href = "/complaint"
+        }
+        if("<%= data.authority %>" == "관리자"){
+            hideContent.style.display = "inline" 
+        }
+        if(window.innerWidth <= 850){
+            document.querySelector(".userBox").style.width = "100%"
+            document.querySelector(".userBox").style.maxWidth = "100%"
+            document.querySelector(".userBox").style.height = "100%"
+            document.querySelector(".userBox").style.maxHeight = "100%"
+            document.querySelector(".userBox").style.border = "0"
+            // document.querySelectorAll(".userUI")[1].style.fontSize = "3vw"
+        }
+        else{
+            document.querySelector(".userBox").style.width = "60vw"
+            document.querySelector(".userBox").style.maxWidth = "1000px"
+            document.querySelector(".userBox").style.height = "55vw"
+            document.querySelector(".userBox").style.maxHeight = "600px"
+            document.querySelector(".userBox").style.border = "3px solid"
+            // document.querySelectorAll(".userUI")[1].style.fontSize = "1em"
+        }
+        page.onclick = ()=>{
+            $.ajax({
+                    url : "/mypage",
+                    type : "get",
+                    success : function(data){
+                        if (data)
+                        { 
+                            // console.log(data)
+                            location.href = "/mypage"
+                            return 
+                        }
+                        else{
+                            return 
+                        }
+                    }
+                })
+        }
     }
 </script>
 </html>

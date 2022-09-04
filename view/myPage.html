@@ -5,6 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
     <title>프로필 수정</title>
     <style>
         @font-face {
@@ -59,10 +61,10 @@
             justify-content: center;
             border: 3px solid white;
             background-color: blue;
-            width:20vh;
-            height:50vh;
+            width:60vw;
+            height:55vw;
             max-width: 1000px;
-            max-height: 600px;
+            /* max-height: 600px; */
             word-break: break-all;
             min-width: 300px;
             min-height: 300px;
@@ -124,6 +126,45 @@
             height: 10vh;
             border: 3px solid white;
         }
+        input{
+            font-size: 15px;
+            font-family: 'DungGeunMo';
+            background-color: blue;
+            border: 3px solid white;
+            color: white;
+        }
+        input:focus {
+        outline: none;
+        }
+        .swal-modal{
+        border: 3px solid white;
+        background-color: blue ;
+        color: white ;
+        }
+        .swal-title {
+            color: white;
+        }
+        .swal-text {
+            color: white;
+        }
+        .swal-footer {
+            color: white;
+        }
+        .swal-button {
+            background-color: blue;
+            color: white;
+        }
+        .swal-button:focus{
+            border: 0;
+            /* outline:0; */
+            background-color: blue;
+            color: white;
+            box-shadow: none;
+        }
+        .swal-button:not([disabled]):hover {
+            background-color: white;
+            color: blue;
+        }
     </style>
 </head>
 <body>
@@ -164,13 +205,27 @@
         document.querySelectorAll("button")[1].style.fontSize  = "2vh"
     }
     else{
-        document.querySelector(".main").style.width = "50vw"
+        document.querySelector(".main").style.width = "60vw"
         document.querySelector(".main").style.maxWidth = "1000px"
-        document.querySelector(".main").style.height = "50vw"
+        document.querySelector(".main").style.height = "55vw"
         document.querySelector(".main").style.maxHeight = "600px"
         document.querySelector(".main").style.border = "3px solid"
         // document.querySelectorAll(".userUI")[1].style.fontSize = "1em"
     }
+    const socket = io.connect();
+    socket.emit("messagejoin","<%= data.nickName %>");
+    socket.on("userStop",(name)=>{
+        swal("안내",`${name}님이 정지 처리 되었습니다.`)
+    })
+    socket.on("userReturn",()=>{
+        swal("안내",`신고가 반려되었습니다.`)
+    })
+    socket.on("stopMsg",()=>{
+        swal("안내","신고로 인해 정지 되셨습니다.")
+        .then(()=>{
+            location.href = "/"
+        })
+    })
     const previewImage = document.getElementById("preview-image");
     let count = false;
     let nick = nickname.value;
@@ -241,8 +296,10 @@
                 }
             });
             if(bab == "불가능"){
-                alert("다른 닉네임으로 해주세요1")
-                return nickname.value = nick
+                swal("안내","다른닉네임으로 해주세요")
+               .then(()=>{
+                   return nickname.value = nick
+               })
             }
             else{  
                 imgUpload();
@@ -258,11 +315,13 @@
             a.forEach(e => {
                 if(nickname.value.includes(e) || nickname.value.includes(" ")){
                     return bab = "불가능"
-                } 
+                }
             });
-            if(bab == "불가능" || nickname.value == ""){
-                alert("다른 닉네임으로 해주세요2")
-                return nickname.value = nick
+            if(bab == "불가능"|| nickname.value == ""){
+               swal("안내","다른닉네임으로 해주세요")
+               .then(()=>{
+                   return nickname.value = nick
+               })
             }
             else{
                 $.ajax({

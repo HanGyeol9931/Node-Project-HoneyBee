@@ -7,6 +7,7 @@
     <title>신고내역</title>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
 </head>
 <style>
     @font-face {
@@ -164,8 +165,8 @@
                     <div class = "complainted"><%=e.complaintedUser%></div>
                     <div class = "complaintContents"><%=e.complaintContents%></div>
                     <div class = "select">
-                        <button>제재</button> 
-                        <button>반려</button>
+                        <button class="userStop">제재</button> 
+                        <button class="userReturn">반려</button>
                     </div>
                 </div>
             <% }) %>
@@ -173,6 +174,97 @@
     </div>
 </body>
 <script>
+// if (window.addEventListener) {
+// 		window.addEventListener('contextmenu', function(e) { try { if (typeof e != 'undefined') { e.preventDefault(); return false; } else { return false; }} catch(e) {} } , false);
+// 	} 
+// else {
+//     window.attachEvent('oncontextmenu', function(e) { try { if (typeof e != 'undefined') { e.preventDefault(); return false; } else { return false; }} catch(e) {} } );
+// }
+// const handlemouseEvent = function(e) {
+//     try {
+//         if (typeof e == 'undefined') {
+//             if (window.event.button && window.event.button == "2") {
+//                 return false;
+//             }
+//         } else if ((e.which && e.which == 3) || (e.button && e.button == 2)) {
+//             e.preventDefault();
+//             return false;
+//         } else if (e.keyCode == 123) { //F12방지
+//             e.preventDefault();
+//             return false;
+//         }
+//     } catch (e) {}
+// };
+// window.onkeydown = handlemouseEvent;
+// window.onkeyup = handlemouseEvent;
+window.onload = ()=>{
+    document.querySelectorAll(".userStop").forEach((userStop)=>{
+        userStop.onclick = (e)=>{
+            const complaint =e.target.parentNode.parentNode.childNodes[1].innerHTML
+            const complainted =e.target.parentNode.parentNode.childNodes[3].innerHTML
+            const complaintContents =e.target.parentNode.parentNode.childNodes[5].innerHTML
+            console.log(complaintContents)
+
+            $.ajax({
+                url : '/blockUser',
+                type : 'post',
+                data : {
+                    complaint : complaint,
+                    complainted : complainted,
+                    complaintContents : complaintContents
+                        },
+                success : function(data){
+                    if(data == "success"){
+                        swal("안내", "적용되었습니다.")
+                        .then(()=>{
+                            location.reload();
+                        })
+                    }
+                    else if(data == "err"){
+                        swal("경고","실패하였습니다.")
+                        .then(()=>{
+                            location.reload();
+                        })
+                    }
+                }
+            })
+        }
+    })
+    document.querySelectorAll(".userReturn").forEach((userReturn)=>{
+        userReturn.onclick = (e)=>{
+            const complaint =e.target.parentNode.parentNode.childNodes[1].innerHTML
+            const complainted =e.target.parentNode.parentNode.childNodes[3].innerHTML
+            const complaintContents =e.target.parentNode.parentNode.childNodes[3].innerHTML
+
+            $.ajax({
+                url : '/returnUser',
+                type : 'post',
+                data : {
+                    complaint : complaint,
+                    complainted : complainted,
+                    complaintContents : complaintContents
+                        },
+                success : function(data){
+                    if(data == "success"){
+                        swal("안내", "적용되었습니다.")
+                        .then(()=>{
+                            location.reload();
+                        })
+                    }
+                    else if(data == "err"){
+                        swal("경고","실패하였습니다.")
+                        .then(()=>{
+                            location.reload();
+                        })
+                    }
+                }
+            })
+        }
+    })
+    // userReturn.onclick = (e)=>{
+    //     console.log(e.target)
+    // }
+}
 
 </script>
 </html>

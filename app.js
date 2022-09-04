@@ -247,7 +247,7 @@ User.update({
     console.log(err);
 });
 })
-
+// test
 //------------------------------------로그아웃-----------------------------------------------------
 app.get("/logout", (req, res) => {
   res.clearCookie("user");
@@ -294,127 +294,172 @@ app.get("/chatting", (req, res) => {
 // socketio-------------------------
 const userArr = [];
 const useridArr = [];
-io.on("connection", (socket) => {
-  app.post("/userOut", (req, res) => {
-    const { nickname } = req.body;
-    User.findOne({
-      raw: true,
-      where: { nickName: nickname },
+io.on("connection",(socket)=>{
+    socket.on("messagejoin",(name)=>{
+        console.log("들어옴")
+        socket.join(name)
     })
-      .then((e) => {
-        User.update(
-          { userStop: Number(e.userStop) + 1 },
-          { where: { nickName: nickname } }
-        );
-        io.to(useridArr[userArr.indexOf(nickname)]).emit("userOut", nickname);
-        res.send(`${nickname}님이 강제퇴장 되었습니다.`);
+    // 신고받은곳에서
+    app.post("/blockUser",(req,res)=>{
+      const {complaint ,complainted,complaintContents } = req.body
+      Complaint.destroy({
+        raw: true,
+        where : {
+          complaintUser : complaint,
+          complaintedUser : complainted,
+          complaintContents : complaintContents,
+        }
       })
-      .catch(() => {
-        console.log("err");
-      });
-  });
-  // 유저떠날때
-  socket.on("disconnect", () => {
-    // 방떠나게 함
-    io.emit("leaveRoom", userArr.splice(useridArr.indexOf(socket.id), 1));
-    // 유저 배열 제거
-    useridArr.splice(useridArr.indexOf(socket.id), 1);
-    io.emit("userCount", userArr.length);
-    io.emit("userShow", userArr);
-    console.log("유저 떠남");
-    console.log(userArr);
-    if (userArr.length <= 0) {
-      io.emit("return");
-    }
-  });
-  console.log("유저 접속");
+      .then(()=>{
+          User.update({
+            userStop: 1
+          },
+          {
+            where : {nickName : complainted}
+          })
+          .then(()=>{
+            res.send("success")
+            io.to(complaint).emit("userStop",complainted)
+            io.to(complainted).emit("stopMsg")
+          })
+          .catch(()=>{
+              res.send('err')
+          })
+      })
+    })
+    app.post("/returnUser",(req,res)=>{
+      const {complaint ,complainted,complaintContents } = req.body
+      Complaint.destroy({
+        raw: true,
+        where : {
+          complaintUser : complaint,
+          complaintedUser : complainted,
+          complaintContents : complaintContents,
+        }
+      })
+      .then(()=>{
+        res.send('success')
+        io.to(complaint).emit("userReturn")
+      })
+      .catch(()=>{
+        res.send('err')
+      })
+    })
+    app.post("/userOut",(req,res)=>{
+        const { nickname }   = req.body;
+        User.findOne({
+            raw : true,
+            where : {nickName : nickname}
+        })
+        .then((e)=>{
+            User.update({userStop : Number(e.userStop)+1},{where : {nickName : nickname}})
+            io.to(useridArr[userArr.indexOf(nickname)]).emit("userOut",nickname)
+            res.send(`${nickname}님이 강제퇴장 되었습니다.`)
+        })
+        .catch(()=>{
+            console.log("err")
+        })
+    })
+    // 유저떠날때
+    socket.on('disconnect', () => {
+        // 방떠나게 함
+        console.log(useridArr)
+        console.log(useridArr.indexOf(socket.id))
+        if(useridArr.indexOf(socket.id) !== -1)// 있는지
+        {
+          io.emit("leaveRoom",userArr.splice(useridArr.indexOf(socket.id),useridArr.indexOf(socket.id) + 1)) // 시작점이랑 끝점 찾은위치에서 + 1
+          //유저 배열 제거
+          useridArr.splice(useridArr.indexOf(socket.id),useridArr.indexOf(socket.id) + 1)
+        }
 
-  socket.on("chat", (name, msg, socket) => {
-    // console.log(original)
-    User.findOne({
-      raw: true,
-      where: { nickName: name },
+        io.emit("userCount",userArr.length)
+        io.emit("userShow",userArr)
+        console.log("유저 떠남");
+        console.log(userArr);
+        if(userArr.length <= 0 ){
+            io.emit("return")
+        } 
+        
+    });
+    console.log("유저 접속");
+    
+    socket.on("chat",(name,msg,socket)=>{
+        // console.log(original)
+        User.findOne({
+            raw : true,
+            where : {nickName : name}
+        })
+        .then((e)=>{
+            if(e.authority == "관리자"){
+                io.emit("adminChat",name,msg);
+                return
+            }
+            else{
+                io.emit("chat",name,msg);
+            }
+        })
+        .catch((e)=>{
+            console.log("err")
+        })
     })
-      .then((e) => {
-        if (e.authority == "관리자") {
-          io.emit("adminChat", name, msg);
-          return;
-        } else {
-          io.emit("chat", name, msg);
+    socket.on("secretChat",(name,user,msg)=>{
+        {
+            io.to(user).emit("secretChat",name,user,msg);
+            io.to(name).emit("secretChatYou",name,user,msg);
         }
-      })
-      .catch((e) => {
-        console.log("err");
-      });
-  });
-  socket.on("secretChat", (name, user, msg) => {
-    {
-      io.to(user).emit("secretChat", name, user, msg);
-      io.to(name).emit("secretChatYou", name, user, msg);
-    }
-  });
-  socket.on("joinRoom", (name) => {
-    userArr.push(name);
-    useridArr.push(socket.id);
-    User.findOne({
-      raw: true,
-      where: { nickName: name },
-    })
-      .then((e) => {
-        if (e.authority == "관리자") {
-          userArr.forEach((e) => {
-            socket.join(e);
-            socket.join("관리자");
-          });
-          io.emit("userShow", userArr);
-          io.emit("adminJoinRoom", name, userArr.length);
-          return;
-        } else {
-          io.emit("joinRoom", name, userArr.length);
-          io.emit("userShow", userArr);
-          socket.join(name);
-        }
-      })
-      .catch((e) => {
-        console.log("err");
-      });
-    console.log(userArr);
-  });
-});
-app.post("/userWarning", (req, res) => {
-  const { nickname } = req.body;
-  User.findOne({
-    raw: true,
-    where: { nickName: nickname },
-  })
-    .then((e) => {
-      // console.log(Number(e.userWarning)+1)
-      // User.update({userWarning : Number(e.userWarning)+1},{where : {nickName : nickname}})
-      // res.send((Number(e.userWarning)+1)+"회 경고 입니다. 5회 이상 경고 시 퇴장입니다.")
-      if (Number(e.userWarning) >= 4) {
-        User.update(
-          { userStop: Number(e.userStop) + 1 },
-          { where: { nickName: nickname } }
-        );
-        res.send("경고 초과로 강제 퇴장 되셨습니다.");
-      } else {
-        User.update(
-          { userWarning: Number(e.userWarning) + 1 },
-          { where: { nickName: nickname } }
-        );
-        res.send(
-          Number(e.userWarning) +
-            1 +
-            "회 경고 입니다. 5회 이상 경고 시 퇴장입니다."
-        );
-      }
-    })
-    .catch((e) => {
-      console.log("err");
-      console.log(e);
-      res.send("에러남");
+
+    });
+   socket.on("joinRoom",(name)=>{
+        userArr.push(name);
+        useridArr.push(socket.id);
+        User.findOne({
+            raw : true,
+            where : {nickName : name}
+        })
+        .then((e)=>{
+            if(e.authority == "관리자"){
+                userArr.forEach((e)=>{
+                    socket.join(e)
+                    socket.join("관리자")
+                })
+                io.emit("userShow",userArr)
+                io.emit("adminJoinRoom",name,userArr.length);
+                return
+            }
+            else{
+                io.emit("joinRoom",name,userArr.length);
+                io.emit("userShow",userArr)
+                socket.join(name);
+            }
+        })
+        .catch((e)=>{
+            console.log("err")
+        })       
+        console.log(userArr)
     });
 });
+app.post("/userWarning",(req,res)=>{
+    const { nickname }   = req.body;
+    User.findOne({
+        raw : true,
+        where : {nickName : nickname}
+    })
+    .then((e)=>{
+        if(Number(e.userWarning) >= 4){
+            User.update({userStop : Number(e.userStop)+1},{where : {nickName : nickname}})
+            res.send("경고 초과로 강제 퇴장 되셨습니다.")
+        }
+        else{
+            User.update({userWarning : Number(e.userWarning)+1},{where : {nickName : nickname}})
+            res.send((Number(e.userWarning)+1)+"회 경고 입니다. 5회 이상 경고 시 퇴장입니다.")
+        }
+    })
+    .catch((e)=>{
+        console.log("err")
+        console.log(e)
+        res.send("에러남")
+    })
+})
 
 // -----------------------------------게시판----------------------------------------
 // 글 목록 보여주는 페이지
