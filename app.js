@@ -14,7 +14,7 @@ const { Script } = require("vm");
 const e = require("express");
 const app = express(); // express 설정1
 // 서버 연결-------------------------------------------------
-const server = app.listen(3000, () => {
+const server = app.listen(3001, () => {
   console.log("서버가 열렸습니다.");
 });
 // app.js가 있는 위치 __dirname views 폴더까지의 경로가 기본값 렌더링할 파일을 모아둔 폴더
@@ -36,7 +36,7 @@ app.use(bodyParser.urlencoded({ extended: false })); // 정제 (미들웨어) 5
 // 필요한 테이블들이 다 생기고 매핑된다. 절대 어긋날 일이 없다.// 테이블 내용이 다르면 오류를 밷어냄 // 여기서 CREATE TABLE 문이 여기서 실행된다는것
 app.use(
   session({
-    secret: "mykey",
+    secret: process.env.SESSION_KEY,
   })
 );
 
@@ -510,7 +510,7 @@ app.post("/edit/:id", (req, res) => {
   const { title, content } = req.body;
   if (title === "" || content === "") {
     res.send(
-      '<script type="text/javascript">alert("내용을 입력하세요"); window.location.href="/";</script>'
+      '<script type="text/javascript">alert("내용을 입력하세요"); window.location.href="/board";</script>'
     );
   } else {
     let postID = req.params.id;
@@ -554,11 +554,11 @@ app.get("/reply/:id", (req, res) => {
 app.post("/reply/:id", (req, res) => {
   let postID = req.params.id;
   const name = req.session.nickname;
-  console.log(name);
+  console.log('#####',name);
   const { replyContent } = req.body;
   if (replyContent === "") {
     res.send(
-      '<script type="text/javascript">alert("내용을 입력하세요"); window.location.href="/";</script>'
+      '<script type="text/javascript">alert("내용을 입력하세요"); window.location.href="/board";</script>'
     );
   } else {
     Reply.create({
@@ -576,18 +576,16 @@ app.post("/reply/:id", (req, res) => {
               where: {
                 postId: postID,
               },
-            }).then((a) => {
-              res.redirect(`/board/${postID}`);
-            });
+            }).then((a)=>{
+              res.render("post", {Post: e, Reply : a, User : req.session.nickname});
+            })
           })
           .catch((err) => {
             console.log(err);
           });
       })
-      .catch(() => {
-        res.send(
-          '<script type="text/javascript">alert("내용을 입력하세요"); window.location.href="/";</script>'
-        );
+      .catch((err) => {
+        console.log(err);
       });
   }
 });

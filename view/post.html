@@ -191,9 +191,10 @@
 </body>
 <script>
     window.onload = function(){
-        console.log('<%= User.nickname %>' )
+        console.log('@@@<%= User.nickname %>')
+        console.log('@@@<%=Post.writer%>');
        
-        if('<%=Post.writer%>' =='<%= User.nickname %>' || '<%=User.authority%>' == '관리자'){
+        if('<%=Post.writer%>' =='<%= User.nickname %>'){
             deletePost.style.display = "block"
             editPost.style.display = 'block'
         } 
