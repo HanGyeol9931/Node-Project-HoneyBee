@@ -247,7 +247,7 @@ User.update({
     console.log(err);
 });
 })
-
+// test
 //------------------------------------로그아웃-----------------------------------------------------
 app.get("/logout", (req, res) => {
   res.clearCookie("user");
