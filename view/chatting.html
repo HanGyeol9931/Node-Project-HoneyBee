@@ -332,6 +332,15 @@
     .btnStyle{
         width: 100%;
     }
+    .use:hover{
+        background-color: white;
+        color: blue;
+    }
+    input{
+        color: blue;
+        font-family: 'DungGeunMo';
+        font-size: 16px;
+    }
     
 </style>
 <body>
@@ -369,7 +378,7 @@
             <div>유저이름 : <span id="userName"><%= data.nickName %></span></div> 
             <!-- 실시간 유저 수 표시 -->
             <div id="userPage">접속자 : <span id="userNumber"></span></div> 
-            <a href="/index">메인 페이지</a>
+            <a href="/index">돌아가기</a>
             <!-- 실시간 유저 확인 버튼 -->
             <button id="userBtn">유저보기</button>
         </div>
@@ -389,6 +398,7 @@
 <script>
 
      window.onload = function(){
+         
         complaintedBtn.onclick = ()=>{
             console.log(complaintContents.value)
             let a = complaintUser.innerHTML.split(": ")
@@ -482,6 +492,18 @@
         const socket = io.connect();
         // 유저 입장시
         socket.emit("joinRoom","<%= data.nickName %>");
+        socket.on("userStop",(name)=>{
+            swal("안내",`${name}님이 정지 처리 되었습니다.`)
+        })
+        socket.on("userReturn",()=>{
+            swal("안내",`신고가 반려되었습니다.`)
+        })
+        socket.on("stopMsg",()=>{
+            swal("안내","신고로 인해 정지 되셨습니다.")
+            .then(()=>{
+                location.href = "/"
+            })
+        })
         socket.on("joinRoom", (name,user) =>{
             messages.innerHTML += `
             <li class="join_text">
@@ -560,15 +582,15 @@
         })
         socket.on("userOut",(nickname)=>{
             swal("주의","관리자에 의해 강제퇴장되셨습니다.")
-            setTimeout(() => {
+            .then(()=>{
                 location.href = "/"
-            }, 1000);
+            })
         })
         socket.on("return",()=>{
             swal("주의","다시 로그인해주세요.")
-            setTimeout(() => {
+            .then(()=>{
                 location.href = "/"
-            }, 1000);
+            })
         })
         msg.onkeypress = function(e){
             const content = document.querySelector(".content").getBoundingClientRect().top+31

@@ -35,9 +35,10 @@ Reply.init(sequelize)
 Complaint.init(sequelize)
 
 User.associate(db);
+User.render(db);
 Post.associate(db);
 Reply.associate(db);
-Complaint.associate(db);
+Complaint.render(db);
 //MyPage.init(sequelize);
 //관계형 맺어주는 함수 사용
 //User.associate(db);
