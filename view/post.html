@@ -127,7 +127,10 @@
     .replyName{
         display: flex;
         justify-content: space-between;
+        align-items: center;
         background-color: white;
+        height: 3vh;
+        padding: 0 5vw;
         color: blue;
     }
     .replyCtt{
@@ -178,30 +181,30 @@
     </form>
     <% Reply.forEach(el => { %>
     <div class="replyBox">
-        <span class="replyName">
+        <div class="shapeBox">
+            <span class="replyName">
             닉네임 : <span class="userNameReply"><%= el.writer %></span>
             <a href="/del_reply/<%= el.replyId %>/<%=Post.postId%>" class="deleteReply">[X]</a>
-        </span>
-        <span class="replyCtt">
-           <%= el.content %>
-        </span>
+            </span>
+            <span class="replyCtt">
+            <%= el.content %>
+            </span>
+        </div>
     </div>
     <% }) %>
 </div>
 </body>
 <script>
     window.onload = function(){
-        console.log("<%=User.nickName%>")
-        console.log("<%=Post.writer%>")
-        console.log("<%= User.authority %>")
         if(('<%=Post.writer%>' =='<%= User.nickName %>') || ('관리자' =='<%= User.authority %>')){
             deletePost.style.display = "block"
             editPost.style.display = 'block'
         } 
         document.querySelectorAll(".replyBox").forEach((e)=>{
-            if((e.children[0].children[0].innerHTML == '<%= User.nickName %>') 
+            console.log(e.children[0].children[0].children[1].innerHTML);
+            if((e.children[0].children[0].children[0].innerHTML == '<%= User.nickName %>') 
             || (('관리자' =='<%= User.authority %>'))){
-                e.children[0].children[1].style.display = "block"
+                e.children[0].children[0].children[1].style.display = "block"
             }
          })
         }

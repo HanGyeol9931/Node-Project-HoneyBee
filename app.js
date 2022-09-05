@@ -8,9 +8,7 @@ const img = require("./js/upload");
 const cookie = require("cookie-parser");
 const socketio = require("socket.io");
 const session = require("express-session");
-const FileStore = require("session-file-store")(session);
 const { sequelize, User, Post, Reply, Complaint } = require("./model");
-const { Script } = require("vm");
 const e = require("express");
 const app = express(); // express 설정1
 // 서버 연결-------------------------------------------------
@@ -37,7 +35,7 @@ app.use(bodyParser.urlencoded({ extended: false })); // 정제 (미들웨어) 5
 app.use(
   session({
     secret: process.env.SESSION_KEY,
-    resave: true,
+    resave: false,
     saveUninitialized: true
   })
 );
@@ -634,7 +632,7 @@ app.post("/reply/:id", (req, res) => {
                 }
               })
               .then((popo)=>{
-                res.render("post", { Post: e, Reply: a, User: popo });
+                res.redirect(`/board/${postID}`);
               })
             })
           })
