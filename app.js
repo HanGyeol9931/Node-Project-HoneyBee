@@ -14,7 +14,7 @@ const { Script } = require("vm");
 const e = require("express");
 const app = express(); // express 설정1
 // 서버 연결-------------------------------------------------
-const server = app.listen(3001, () => {
+const server = app.listen(3000, () => {
   console.log("서버가 열렸습니다.");
 });
 // app.js가 있는 위치 __dirname views 폴더까지의 경로가 기본값 렌더링할 파일을 모아둔 폴더
@@ -603,7 +603,6 @@ app.get("/reply/:id", (req, res) => {
 app.post("/reply/:id", (req, res) => {
   let postID = req.params.id;
   const name = req.session.nickname;
-  console.log('#####',name);
   const { replyContent } = req.body;
   if (replyContent === "") {
     res.send(
