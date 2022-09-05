@@ -159,10 +159,12 @@ app.post("/index", (req, res) => {
           '<script type="text/javascript">alert("아이디와 비밀번호를 입력해주세요."); location.href="/";</script>'
         );
       } else if (e === null) {
-        res.send(
-          '<script type="text/javascript">alert("없는정보입니다"); location.href="/";</script>'
-        );
-      } else {
+        res.send('<script type="text/javascript">alert("없는정보입니다"); location.href="/";</script>');
+      }
+      else if(e.userStop >= 1){
+        res.send('<script type="text/javascript">alert("정지된아이디입니다"); location.href="/";</script>');
+      }
+       else {
         const hashPassword = e.userPassword;
         bcrypt.compare(userpw, hashPassword, (err, same) => {
           if (same) {
@@ -231,25 +233,23 @@ app.post("/findPw", (req, res) => {
 });
 // 여기서는 비빌번호 재설정해주는 부분
 app.post("/repw",(req,res)=>{
-const {name, userPassword} = req.body
+  const {name, userPassword} = req.body;
 
-bcrypt.hash(userPassword,10,(err,encrypted)=>{
-  User.update({
-    userPassword : encrypted, 
-  },
-  {
-    where: {
-      nickName : name,
-  }
-  }).then((e)=>{
-    res.send('<script type="text/javascript">alert("정상적으로 변경되었습니다."); location.href="/";</script>');
-  }).catch((err)=>{
-    console.log(err);
+  bcrypt.hash(userPassword,10,(err,encrypted)=>{
+    User.update({
+      userPassword : encrypted, 
+    },
+    {
+      where: {
+        nickName : name,
+    }
+    }).then((e)=>{
+      res.send('<script type="text/javascript">alert("정상적으로 변경되었습니다."); location.href="/";</script>');
+    }).catch((err)=>{
+      console.log(err);
+    })  
   })  
-  })  
-})
-
-
+});
 
 // test
 //------------------------------------로그아웃-----------------------------------------------------
