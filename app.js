@@ -37,6 +37,8 @@ app.use(bodyParser.urlencoded({ extended: false })); // 정제 (미들웨어) 5
 app.use(
   session({
     secret: process.env.SESSION_KEY,
+    resave: true,
+    saveUninitialized: true
   })
 );
 
@@ -506,6 +508,7 @@ app.post("/write", (req, res) => {
 // 글 보여주기
 app.get("/board/:id", function (req, res) {
   let postID = req.params.id;
+  const name = req.session.nickname;
   Post.findOne({
     raw: true,
     where: { postId: postID },
@@ -620,17 +623,23 @@ app.post("/reply/:id", (req, res) => {
               where: {
                 postId: postID,
               },
-            }).then((a)=>{
-              res.render("post", {Post: e, Reply : a, User : req.session.nickname});
+            })
+            .then((a)=>{
+              User.findOne({
+                raw:true,
+                where:{
+                  nickName : req.session.nickname
+                }
+              })
+              .then((popo)=>{
+                res.render("post", { Post: e, Reply: a, User: popo });
+              })
             })
           })
           .catch((err) => {
             console.log(err);
           });
       })
-      .catch((err) => {
-        console.log(err);
-      });
   }
 });
 
@@ -638,6 +647,7 @@ app.post("/reply/:id", (req, res) => {
 app.get("/del_reply/:id/:co", (req, res) => {
   let replyID = req.params.id;
   let postID = req.params.co;
+  const name = req.session.nickname;
   const { abo } = req.body;
   Reply.destroy({
     raw: true,
@@ -645,7 +655,6 @@ app.get("/del_reply/:id/:co", (req, res) => {
       replyId: replyID,
     },
   }).then((e) => {
-    console.log(abo);
     Post.findOne({
       raw: true,
       where: { postId: postID },
@@ -656,7 +665,15 @@ app.get("/del_reply/:id/:co", (req, res) => {
             postId: postID,
           },
         }).then((a) => {
-          res.render("post", { Post: e, Reply: a, User: req.session.nickname });
+          User.findOne({
+            raw:true,
+            where:{
+              nickName : req.session.nickname
+            }
+          })
+          .then((popo)=>{
+            res.render("post", { Post: e, Reply: a, User: popo });
+          })
         });
       })
       .catch((err) => {

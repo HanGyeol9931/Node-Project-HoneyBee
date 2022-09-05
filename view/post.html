@@ -191,15 +191,16 @@
 </body>
 <script>
     window.onload = function(){
-        console.log('@@@<%= User.nickname %>')
-        console.log('@@@<%=Post.writer%>');
-       
-        if('<%=Post.writer%>' =='<%= User.nickname %>'){
+        console.log("<%=User.nickName%>")
+        console.log("<%=Post.writer%>")
+        console.log("<%= User.authority %>")
+        if(('<%=Post.writer%>' =='<%= User.nickName %>') || ('관리자' =='<%= User.authority %>')){
             deletePost.style.display = "block"
             editPost.style.display = 'block'
         } 
         document.querySelectorAll(".replyBox").forEach((e)=>{
-            if((e.children[0].children[0].innerHTML == '<%= User.nickname %>')){
+            if((e.children[0].children[0].innerHTML == '<%= User.nickName %>') 
+            || (('관리자' =='<%= User.authority %>'))){
                 e.children[0].children[1].style.display = "block"
             }
          })
