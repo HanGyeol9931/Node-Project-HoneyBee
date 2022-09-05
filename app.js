@@ -145,15 +145,14 @@ app.post("/userComplaint", (req, res) => {
 
 //------------------------------로그인 및 쿠키 생성--------------------------------------------
 app.post("/index", (req, res) => {
-  const userid = req.body.userId;
-  const userpw = req.body.userPassword;
+  const { userId, userPassword  } = req.body;
   User.findOne({
     raw: true,
-    where: { userId: userid },
+    where: { userId: userId },
   })
     .then((e) => {
       // findOne을해서 담은 정보를 e에 넣음
-      if ((userid && userpw) == "") {
+      if ((userId && userPassword) == "") {
         // 유저아이디와 패스워드가 공란이라면
         res.send(
           '<script type="text/javascript">alert("아이디와 비밀번호를 입력해주세요."); location.href="/";</script>'
@@ -166,10 +165,10 @@ app.post("/index", (req, res) => {
       }
        else {
         const hashPassword = e.userPassword;
-        bcrypt.compare(userpw, hashPassword, (err, same) => {
+        bcrypt.compare(userPassword, hashPassword, (err, same) => {
           if (same) {
             req.session.nickname = e.nickName;
-            res.cookie("user", userid, {
+            res.cookie("user", userId, {
               // 로그인시 id로 쿠키만들기
               expires: new Date(Date.now() + 900000),
               httpOnly: true,
@@ -231,10 +230,9 @@ app.post("/findPw", (req, res) => {
           res.send(err);
       })
 });
-// 여기서는 비빌번호 재설정해주는 부분
+// 여기서는 비빌번호 재설정해주는 부분 로그인시 bcrypt compare 해서 비교하기때문에 업데이트도 비밀로 해서 올려야댐 
 app.post("/repw",(req,res)=>{
   const {name, userPassword} = req.body;
-
   bcrypt.hash(userPassword,10,(err,encrypted)=>{
     User.update({
       userPassword : encrypted, 
