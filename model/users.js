@@ -62,6 +62,7 @@ class User extends Sql.Model{
     }
     static render(db){
         db.User.hasMany(db.Complaint, { foreignKey : "complaintUser", sourceKey : "nickName" });
+        // 실행하고 belongsTo => hasMany 바꿔~
     }
 }
 
