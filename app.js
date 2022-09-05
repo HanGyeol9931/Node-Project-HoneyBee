@@ -229,24 +229,28 @@ app.post("/findPw", (req, res) => {
           res.send(err);
       })
 });
-
+// 여기서는 비빌번호 재설정해주는 부분
 app.post("/repw",(req,res)=>{
-const {nickname , name, pwd} = req.body
-console.log(name)
-User.update({  
-  userPassword : pwd, 
-},
-{
+const {name, userPassword} = req.body
+
+bcrypt.hash(userPassword,10,(err,encrypted)=>{
+  User.update({
+    userPassword : encrypted, 
+  },
+  {
     where: {
-        nickName : name,
-    }
-}
-).then((e)=>{
+      nickName : name,
+  }
+  }).then((e)=>{
     res.send('<script type="text/javascript">alert("정상적으로 변경되었습니다."); location.href="/";</script>');
-}).catch((err)=>{  
+  }).catch((err)=>{
     console.log(err);
-});
+  })  
+  })  
 })
+
+
+
 // test
 //------------------------------------로그아웃-----------------------------------------------------
 app.get("/logout", (req, res) => {
