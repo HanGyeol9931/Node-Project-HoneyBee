@@ -118,6 +118,7 @@ app.get("/index", (req, res) => {
       res.redirect("/login");
     });
 });
+// 신고 페이지
 app.get("/complaint", (req, res) => {
   Complaint.findAll({
     raw: true,
@@ -126,6 +127,7 @@ app.get("/complaint", (req, res) => {
     // console.log(e)
   });
 });
+// 채팅방에서 신고를 했을때
 app.post("/userComplaint", (req, res) => {
   const { complaintUser, complaintedUser, complaintContents } = req.body;
   User.findOne({
@@ -189,6 +191,7 @@ app.post("/index", (req, res) => {
       res.send(err);
     });
 });
+// 마이페이지 닉네임 변경
 app.post("/nickname", (req, res) => {
   const { nickname, name } = req.body;
   console.log(nickname);
