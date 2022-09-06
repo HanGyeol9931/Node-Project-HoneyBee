@@ -47,13 +47,17 @@
         
     }
     #main{
+        text-align: center;
         display: block;
         overflow: scroll;
         /*  */
         font-size:1em;
         width: 100%;
         /* display: flex; */
-        transform: translate(35%, 150%);
+        position:absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
     }
     #main::-webkit-scrollbar {
         display: none;
@@ -65,7 +69,6 @@
         justify-content: space-around;
         align-items: center;
         border-bottom: 3px solid white;
-        height: 30px;
     }
     #userBox{
         background-color: blue;
@@ -105,7 +108,6 @@
     #stopText{
         display: none;
     }
-    
     input:focus {
         outline: none;
     }
@@ -150,44 +152,25 @@
         text-align: center;
     }
     .complaintContents{
+        font-size: 1vw;
         width: 50%;
         text-align: center;
+        padding: 10px;
     }
     .select{
         width: 10%;
         text-align: center;
     }
-    h1{
-        text-align: center;
-        padding-top: 5%;
-    }
     .btn{  
-    border-radius: 4px;
-    height: 44px;
-    font-size: 30px;
-    font-weight: 600;
-    text-transform: uppercase;
-    -webkit-transition : all 200ms linear;
-    transition: all 200ms linear;
-    padding: 0 30px;
-    letter-spacing: 1px;
-    display: -webkit-inline-flex;
-    display: -ms-inline-flexbox;
-    display: inline-flex;
-    -webkit-align-items: center;
-    -moz-align-items: center;
-    -ms-align-items: center;
-    align-items: center;
-    -webkit-justify-content: center;
-    -moz-justify-content: center;
-    -ms-justify-content: center;
-    justify-content: center;
-    -ms-flex-pack: center;
-    text-align: center;
-    border: none;
-    background-color: blue;
-    color: white;
-  /* box-shadow: 0 8px 24px 0 rgba(255,235,167,.2); */
+        font-family: 'DungGeunMo';
+        /* width: 15vw; */
+        border: 0;
+        background-color: blue;
+        color: white;
+        font-size: 2vw;
+        padding: 10px;
+        margin-top: 50px;
+
     }
     .btn:active,
     .btn:focus{  
@@ -200,11 +183,8 @@
     }
     .form-style {
     padding: 13px 20px;
-    /* padding-left: 55px; */ 
-    /* height: 5vw;
-    min-height: 5vh;
-    width: 100%;
-    font-weight: 500; */
+    text-align: center;
+
     }
     .mt2{
         margin-top: 0.5rem!important;
@@ -212,10 +192,38 @@
     .complaintContents > input {
         display: none;
     }
+    .pwContent{
+        padding: 0 !important;
+        font-size: 1.5vw;
+        text-align: center;
+        margin: 20px 0 20px 0;
+    }
+    .pwContent > input{
+        box-sizing: border-box;
+        border: 3px solid white;
+        background-color: blue;
+        color: white;
+        font-size: 1.5vw;
+    }
+    #home{
+        padding: 5px;
+        font-size: 1vw;
+    }
+    #home:hover{
+        background-color: white;
+        color: blue;
+    }
+    .tilteName{
+        font-size: 3.5vw;
+        position: absolute;
+        left: 50%;
+        top: 30px;
+        transform: translate(-50%, 0);
+    }
 </style>
 <body>
     <form action="repw" method="post" >
-    <h1>비밀번호 재설정</h1>
+    <div class="tilteName">비밀번호 재설정</div>
     <div class="content">
         <div class="title">
             <div class = "complaintContents"><input type="text" name="name" value="<%=data.nickName%>"> <%=data.nickName%>님 비밀번호를 재설정해주세요.</div>
@@ -223,11 +231,11 @@
         </div>
         <div id="main">
             
-                <div class="">
-                    비밀번호&nbsp;&nbsp;&nbsp;&nbsp; :  <input type="password" name="userPassword" class="form-style" id="pwd" >
+                <div class="pwContent">
+                    비밀번호&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :  <input type="password" name="userPassword"  id="pwd" >
                 </div>
-                <div class="">
-                    비밀번호확인 : <input type="password" name="" class="form-style mt2" id="repwd" >
+                <div class="pwContent">
+                    비밀번호 확인 : <input type="password" name=""id="repwd" >
                 </div>
                 <button id="upload" type="submit" class="btn" >재설정하세요 클 릭</button>
              
@@ -236,6 +244,24 @@
     </form>
 </body>
 <script>
+    let contentY =(document.querySelector(".content").getBoundingClientRect().top/2)-20
+    console.log(window.innerWidth)
+    window.onload = ()=>{
+        document.querySelector(".tilteName").style.top = contentY+"px"
+        if(window.innerWidth < 500){
+            document.querySelector(".tilteName").style.fontSize = "30px"
+            document.querySelector(".tilteName").style.width = "100%"
+            document.querySelector(".tilteName").style.textAlign = "center"
+        }
+    }
+    window.onresize = ()=>{
+        document.querySelector(".tilteName").style.top = contentY+"px"
+        if(window.innerWidth < 500){
+            document.querySelector(".tilteName").style.fontSize = "30px"
+            document.querySelector(".tilteName").style.width = "100%"
+            document.querySelector(".tilteName").style.textAlign = "center"
+        }
+    }
     home.onclick = () => {
         location.href = "/index"
     }
