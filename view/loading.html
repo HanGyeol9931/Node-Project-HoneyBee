@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>HONEY BEE</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.2/css/all.css'>
+    <link rel='stylesheet' href='css/https___gist_githubuserco.css'>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<style>
+    @font-face {
+        font-family: 'DungGeunMo';
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/DungGeunMo.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
+    body,
+    html {
+        height: 100vh;
+        width: 100%;
+    }
+
+    body {
+        background-color: blue;
+        color: white;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .container {
+        width: 100%;
+        height: 100%;
+        padding: 3rem;
+        font-size: 2.5rem;
+        letter-spacing: -1px;
+        font-family: 'DungGeunMo';
+        overflow-y: scroll;
+    }
+
+    .container::-webkit-scrollbar {
+        width: 6px;
+    }
+</style>
+
+<body>
+    <div class='container'>
+        <div class='typewriter'></div>
+    </div>
+</body>
+<script src='https://cdn.jsdelivr.net/npm/typeit@6.0.2/dist/typeit.min.js'></script>
+<script>
+    const instance = new TypeIt('.typewriter', {
+        startDelay: 900,
+        speed: 70,
+        cursorChar: '_',
+        cursorSpeed: 500
+    })
+        .type('안녕 우리는 허니비야')
+        .pause(500)
+        .break()
+        .break()
+        .type("너희를 위한 커뮤니티 사이트를 만들어봤어")
+        .pause(500)
+        .type(".")
+        .pause(500)
+        .type(".")
+        .pause(500)
+        .type(".")
+        .break()
+        .break()
+        .type("채팅방과")
+        .pause(500)
+        .type(" 게시판")
+        .pause(500)
+        .type(" 마이페이지를")
+        .pause(500)
+        .type(" 마음껏 이용해줘")
+        .pause(500)
+        .type(".")
+        .pause(500)
+        .type(".")
+        .pause(500)
+        .type(".")
+        .pause(500)
+        .break()
+        .break()
+        .break()
+        .break()
+        .break()
+        .type('_아무키나 누르면 메인페이지로 이동합니다')
+        .exec(
+            async () => {
+                await new Promise((resolve, reject) => {
+                    document.addEventListener("keydown", () => {
+                        window.location.href = "/login"
+                    })
+                });
+            })
+        .go()
+</script>
+
+</html>

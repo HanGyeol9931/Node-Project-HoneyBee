@@ -32,6 +32,7 @@
   },
   "homepage": "https://github.com/HanGyeol9931/node-project#readme",
   "dependencies": {
+    "bootstrap": "^5.2.0",
     "express-session": "^1.17.3",
     "sessions": "^0.0.2-7"
   },

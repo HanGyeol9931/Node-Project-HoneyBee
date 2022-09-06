@@ -50,7 +50,14 @@ sequelize
     // 연결실패
     console.log(err);
   });
+
+
 app.get("/", (req, res) => {
+  // 현재까지 메인인 log.html
+  res.render("loading");
+});
+
+app.get("/login", (req, res) => {
   // 현재까지 메인인 log.html
   res.render("index");
 });
@@ -86,10 +93,6 @@ app.post("/create", (req, res) => {
   }
 });
 
-app.get("/", (req, res) => {
-  // 현재까지 메인인 log.html
-  res.render("index");
-});
 app.get("/mypage", (req, res) => {
   User.findOne({
     raw: true,
@@ -99,7 +102,7 @@ app.get("/mypage", (req, res) => {
       res.render("myPage", { data: e });
     })
     .catch(() => {
-      res.redirect("/");
+      res.redirect("/login");
     });
 });
 
@@ -112,7 +115,7 @@ app.get("/index", (req, res) => {
       res.render("start", { data: e });
     })
     .catch(() => {
-      res.redirect("/");
+      res.redirect("/login");
     });
 });
 app.get("/complaint", (req, res) => {
@@ -155,13 +158,13 @@ app.post("/index", (req, res) => {
       if ((userId && userPassword) == "") {
         // 유저아이디와 패스워드가 공란이라면
         res.send(
-          '<script type="text/javascript">alert("아이디와 비밀번호를 입력해주세요."); location.href="/";</script>'
+          '<script type="text/javascript">alert("아이디와 비밀번호를 입력해주세요."); location.href="/login";</script>'
         );
       } else if (e === null) {
-        res.send('<script type="text/javascript">alert("없는정보입니다"); location.href="/";</script>');
+        res.send('<script type="text/javascript">alert("없는정보입니다"); location.href="/login";</script>');
       }
       else if(e.userStop >= 1){
-        res.send('<script type="text/javascript">alert("정지된아이디입니다"); location.href="/";</script>');
+        res.send('<script type="text/javascript">alert("정지된아이디입니다"); location.href="/login";</script>');
       }
        else {
         const hashPassword = e.userPassword;
@@ -176,7 +179,7 @@ app.post("/index", (req, res) => {
             res.render("start", { data: e });
           } else {
             res.send(
-              '<script type="text/javascript">alert("로그인 정보가 일치하지 않습니다."); window.location.href="/";</script>'
+              '<script type="text/javascript">alert("로그인 정보가 일치하지 않습니다."); window.location.href="/login";</script>'
             );
           }
         });
@@ -242,7 +245,7 @@ app.post("/repw",(req,res)=>{
         nickName : name,
     }
     }).then((e)=>{
-      res.send('<script type="text/javascript">alert("정상적으로 변경되었습니다."); location.href="/";</script>');
+      res.send('<script type="text/javascript">alert("정상적으로 변경되었습니다."); location.href="/login";</script>');
     }).catch((err)=>{
       console.log(err);
     })  
@@ -253,7 +256,7 @@ app.post("/repw",(req,res)=>{
 //------------------------------------로그아웃-----------------------------------------------------
 app.get("/logout", (req, res) => {
   res.clearCookie("user");
-  res.redirect("/");
+  res.redirect("/login");
 });
 //-------------------------------프로파일픽쳐저장------------------------------------------
 app.post("/myPage", img.upload.single("file"), (req, res) => {
@@ -290,7 +293,7 @@ app.get("/chatting", (req, res) => {
       res.render("chatting", { data: e });
     })
     .catch(() => {
-      res.redirect("/");
+      res.redirect("/login");
     });
 });
 // socketio-------------------------
@@ -476,6 +479,9 @@ app.post("/board", (req, res) => {
   });
 });
 
+// 페이지네이션
+app.get("/board_")
+
 // 글쓰기 페이지
 app.get("/write", (req, res) => {
   const name = req.session.nickname;
@@ -539,7 +545,7 @@ app.get("/board/:id", function (req, res) {
       });
   })
   .catch(()=>{
-    res.redirect('/')
+    res.redirect('/login')
   })
 });
 

@@ -65,6 +65,17 @@
     #boardFilter > option{
         color: black;
     }
+    .pagination{
+        margin-top: 6vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        list-style: none;
+    }
+    .pagination li {
+        margin: 2vh;
+    }
+
 </style>
 <body>
 <h1>자유게시판</h1>
@@ -84,7 +95,15 @@
         </tr>
     </table>
 </div>
-
+<nav>
+    <ul class="pagination">
+        <li><a class="" href=""><<</a></li>
+        <li><a class="" href="">1</a></li>
+        <li><a class="" href="">2</a></li>
+        <li><a class="" href="">3</a></li>
+        <li><a class="" href="">>></a></li>
+    </ul>
+</nav>
 </body>
 <script src="/static/js/board.js"></script>
 </html>
