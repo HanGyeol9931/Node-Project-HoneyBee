@@ -501,7 +501,7 @@
         socket.on("stopMsg",()=>{
             swal("안내","신고로 인해 정지 되셨습니다.")
             .then(()=>{
-                location.href = "/"
+                location.href = "/login"
             })
         })
         socket.on("joinRoom", (name,user) =>{
@@ -583,13 +583,13 @@
         socket.on("userOut",(nickname)=>{
             swal("주의","관리자에 의해 강제퇴장되셨습니다.")
             .then(()=>{
-                location.href = "/"
+                location.href = "/login"
             })
         })
         socket.on("return",()=>{
             swal("주의","다시 로그인해주세요.")
             .then(()=>{
-                location.href = "/"
+                location.href = "/login"
             })
         })
         msg.onkeypress = function(e){
@@ -623,7 +623,7 @@
                     else if(users.includes("<%= data.nickName %>") == false){
                         swal("경고","닉네임 변경이 감지되었습니다.")
                         setTimeout(() => {
-                            location.href = "/"
+                            location.href = "/login"
                         }, 1000);
                         // location.href = "/"
                     }
@@ -752,7 +752,7 @@
                     else if(users.includes("<%= data.nickName %>") == false){
                         swal("경고","닉네임 변경이 감지되었습니다.");
                         setTimeout(() => {
-                            location.href = "/"
+                            location.href = "/login"
                         }, 1000);
                     }
                     else{
@@ -881,7 +881,7 @@
                             if (data == "경고 초과로 강제 퇴장 되셨습니다.")
                             { 
                                 setTimeout(() => {
-                                    location.href = "/"
+                                    location.href = "/login"
                                 }, 1000);
                                 return swal("주의",data);;
                             }

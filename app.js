@@ -9,7 +9,7 @@ const cookie = require("cookie-parser");
 const socketio = require("socket.io");
 const session = require("express-session");
 const { sequelize, User, Post, Reply, Complaint } = require("./model");
-const e = require("express");
+const { makePaginate } = require("sequelize-cursor-pagination");
 const app = express(); // express 설정1
 // 서버 연결-------------------------------------------------
 const server = app.listen(3000, () => {
@@ -53,7 +53,6 @@ sequelize
 
 
 app.get("/", (req, res) => {
-  // 현재까지 메인인 log.html
   res.render("loading");
 });
 
@@ -482,9 +481,6 @@ app.post("/board", (req, res) => {
   });
 });
 
-// 페이지네이션
-app.get("/board_")
-
 // 글쓰기 페이지
 app.get("/write", (req, res) => {
   const name = req.session.nickname;
@@ -551,6 +547,9 @@ app.get("/board/:id", function (req, res) {
     res.redirect('/login')
   })
 });
+
+// 페이징
+
 
 // 수정하기 페이지
 // 글쓴 사람만 수정할 수 있음
