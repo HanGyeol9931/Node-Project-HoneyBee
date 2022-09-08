@@ -414,7 +414,7 @@
                         url : "/userComplaint",
                         type : "post",
                         data : {
-                            complaintUser : a[1],
+                            complaintUser : '<%= data.nickName %>',
                             complaintedUser : b[1],
                             complaintContents : complaintContents.value
                         },

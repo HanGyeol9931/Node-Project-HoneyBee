@@ -100,9 +100,9 @@
         .exec(
             async () => {
                 await new Promise((resolve, reject) => {
-                    document.addEventListener("keydown", () => {
-                        window.location.href = "/login"
-                    })
+                    function move(){ window.location.href = "/login" }
+                    document.addEventListener("keydown", move())                 
+                    document.addEventListener("click", move())                 
                 });
             })
         .go()

@@ -9,7 +9,6 @@ const cookie = require("cookie-parser");
 const socketio = require("socket.io");
 const session = require("express-session");
 const { sequelize, User, Post, Reply, Complaint } = require("./model");
-const { makePaginate } = require("sequelize-cursor-pagination");
 const app = express(); // express 설정1
 // 서버 연결-------------------------------------------------
 const server = app.listen(3000, () => {
@@ -64,7 +63,6 @@ app.get("/login", (req, res) => {
 app.post("/create", (req, res) => {
   // create이 함수를 사용하면 해당 테이블에 컬럼을 추가할 수 있다.
   const { nickName, joinId, joinPassword } = req.body;
-  console.log(joinId);
   if ((joinId && joinPassword) == "") {
     res.send("비밀번호를 입력해주세요.");
   } else {
@@ -335,6 +333,10 @@ io.on("connection",(socket)=>{
               res.send('err')
           })
       })
+      .catch((err)=>{
+        console.log(err);
+        res.send("err")
+      })
     })
     app.post("/returnUser",(req,res)=>{
       const {complaint ,complainted,complaintContents } = req.body
@@ -372,8 +374,6 @@ io.on("connection",(socket)=>{
     // 유저떠날때
     socket.on('disconnect', () => {
         // 방떠나게 함
-        console.log(useridArr)
-        console.log(useridArr.indexOf(socket.id))
         if(useridArr.indexOf(socket.id) !== -1)// 있는지
         {
           io.emit("leaveRoom",userArr.splice(useridArr.indexOf(socket.id),useridArr.indexOf(socket.id) + 1)) // 시작점이랑 끝점 찾은위치에서 + 1
