@@ -492,6 +492,12 @@
         const socket = io.connect();
         // 유저 입장시
         socket.emit("joinRoom","<%= data.nickName %>");
+        socket.on("overlap",()=>{
+            swal("안내",`이미 들어온 닉네임입니다.`)
+            .then(()=>{
+                location.href = "/login"
+            })
+        })
         socket.on("userStop",(name)=>{
             swal("안내",`${name}님이 정지 처리 되었습니다.`)
         })

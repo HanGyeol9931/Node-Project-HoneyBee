@@ -9,6 +9,7 @@ const cookie = require("cookie-parser");
 const socketio = require("socket.io");
 const session = require("express-session");
 const { sequelize, User, Post, Reply, Complaint } = require("./model");
+const { makePaginate } = require("sequelize-cursor-pagination");
 const app = express(); // express 설정1
 // 서버 연결-------------------------------------------------
 const server = app.listen(3000, () => {
@@ -33,7 +34,7 @@ app.use(bodyParser.urlencoded({ extended: false })); // 정제 (미들웨어) 5
 // 필요한 테이블들이 다 생기고 매핑된다. 절대 어긋날 일이 없다.// 테이블 내용이 다르면 오류를 밷어냄 // 여기서 CREATE TABLE 문이 여기서 실행된다는것
 app.use(
   session({
-    secret: "언뇽",
+    secret: process.env.SESSION_KEY,
     resave: false,
     saveUninitialized: true
   })
@@ -49,6 +50,7 @@ sequelize
     // 연결실패
     console.log(err);
   });
+
 
 app.get("/", (req, res) => {
   res.render("loading");
@@ -140,7 +142,10 @@ app.post("/userComplaint", (req, res) => {
       }).then(() => {
         res.send("good");
         return;
-      });
+      })
+      .catch(()=>{
+        res.send("다시 시도해주세요");
+      })
     }
   });
 });
@@ -191,8 +196,7 @@ app.post("/index", (req, res) => {
 // 마이페이지 닉네임 변경
 app.post("/nickname", (req, res) => {
   const { nickname, name } = req.body;
-  console.log(nickname);
-  console.log(name);
+  req.session.nickname = nickname
   User.update(
     {
       nickName: nickname,
@@ -203,8 +207,8 @@ app.post("/nickname", (req, res) => {
       },
     }
   )
-    .then((e) => {
-      res.send("good");
+    .then(() => {
+      res.send("good")
     })
     .catch((err) => {
       console.log(err);
@@ -301,7 +305,7 @@ const userArr = [];
 const useridArr = [];
 io.on("connection",(socket)=>{
     socket.on("messagejoin",(name)=>{
-        console.log("들어옴")
+        // console.log("들어옴")
         socket.join(name)
     })
     // 신고받은곳에서
@@ -379,13 +383,15 @@ io.on("connection",(socket)=>{
 
         io.emit("userCount",userArr.length)
         io.emit("userShow",userArr)
-        console.log("유저 떠남");
-        console.log(userArr);
+        // console.log("유저 떠남");
+        // console.log(userArr);
         if(userArr.length <= 0 ){
             io.emit("return")
-          } console.log("유저 접속");
-          })
-     
+        } 
+        
+    });
+    console.log("유저 접속");
+    
     socket.on("chat",(name,msg,socket)=>{
         // console.log(original)
         User.findOne({
@@ -413,6 +419,9 @@ io.on("connection",(socket)=>{
 
     });
    socket.on("joinRoom",(name)=>{
+        if(userArr.includes(name)){
+          io.to(socket.id).emit("overlap")
+        }
         userArr.push(name);
         useridArr.push(socket.id);
         User.findOne({
@@ -438,7 +447,7 @@ io.on("connection",(socket)=>{
         .catch((e)=>{
             console.log("err")
         })       
-        console.log(userArr)
+        // console.log(userArr)
     });
 });
 app.post("/userWarning",(req,res)=>{
@@ -524,24 +533,28 @@ app.get("/board/:id", function (req, res) {
         User.findOne({
           raw: true,
           where: {
-              nickName: name,
-            },
-          }).then((e) => {
-            res.render("post", {
-              Post: result,
-              Reply: el,
-              User: e,
-            });
+            nickname: req.session.nickname,
+          },
+        })
+        .then((e) => {
+          res.render("post", {
+            Post: result,
+            Reply: el,
+            User: e,
           });
         })
-        .catch((err) => {
-          console.log(err);
-        });
-    })
-    .catch(() => {
-      res.redirect("/login");
-    });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  })
+  .catch(()=>{
+    res.redirect('/login')
+  })
 });
+
+// 페이징
+
 
 // 수정하기 페이지
 // 글쓴 사람만 수정할 수 있음
@@ -612,31 +625,34 @@ app.post("/reply/:id", (req, res) => {
       postId: postID,
       content: replyContent,
       writer: name,
-    }).then(() => {
-      Post.findOne({
-        raw: true,
-        where: { postId: postID },
-      })
-        .then((e) => {
-          Reply.findAll({
-            where: {
-              postId: postID,
-            },
-          }).then((a) => {
-            User.findOne({
-              raw: true,
-              where: {
-                nickName: req.session.nickname,
-              },
-            }).then((popo) => {
-              res.redirect(`/board/${postID}`);
-            });
-          });
+    })
+      .then(() => {
+        Post.findOne({
+          raw: true,
+          where: { postId: postID },
         })
-        .catch((err) => {
-          console.log(err);
-        });
-    });
+          .then((e) => {
+            Reply.findAll({
+              where: {
+                postId: postID,
+              },
+            })
+            .then((a)=>{
+              User.findOne({
+                raw:true,
+                where:{
+                  nickName : req.session.nickname
+                }
+              })
+              .then((popo)=>{
+                res.redirect(`/board/${postID}`);
+              })
+            })
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      })
   }
 });
 
@@ -663,13 +679,14 @@ app.get("/del_reply/:id/:co", (req, res) => {
           },
         }).then((a) => {
           User.findOne({
-            raw: true,
-            where: {
-              nickName: req.session.nickname,
-            },
-          }).then((popo) => {
+            raw:true,
+            where:{
+              nickName : req.session.nickname
+            }
+          })
+          .then((popo)=>{
             res.render("post", { Post: e, Reply: a, User: popo });
-          });
+          })
         });
       })
       .catch((err) => {

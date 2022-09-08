@@ -228,7 +228,7 @@
     })
     const previewImage = document.getElementById("preview-image");
     let count = false;
-    let nick = nickname.value;
+    
     let p = previewImage.src
     // 
         function readImage(input) {
@@ -258,29 +258,6 @@
             count = false;
         }
     })
-
-    // upload.onclick = function(e){
-    //     e.preventDefault();
-    //     imgUpload();
-    // };
-    // function imgUpload(){
-    //     let formdata = new FormData();
-    //     var file = document.querySelector('#input-image').files[0];  
-    //     formdata.append('file', file);	
-    //     formdata.append('nickname', nick);
-    //     formdata.append('chageNickname', nickname.value);
-    //     $.ajax({
-    //         url : '/myPage',
-    //         type : 'post',
-    //         processData: false,
-    //         contentType: false,
-    //         data : formdata,
-    //         success : function(data){
-    //             alert('적용되었습니다');
-    //             location.reload();
-    //         }
-    //     })
-    // }
     // 적용 버튼 이미지 업로드 
     upload.onclick = function(e){
         const a =["@","!","관리자","한결","겨리","섹","발","끼","병","신","년","놈","롬","븅","뵹","롬","럼","자지","보지","따","추","창희","순현"]
@@ -329,8 +306,7 @@
                     type : 'post',
                     data : {
                         nickname : nickname.value,
-                        name : nick
-                            },
+                        name : "<%=data.nickName%>"},
                     success : function(data){
                         alert('적용되었습니다');
                         location.reload();
