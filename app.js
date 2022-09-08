@@ -9,7 +9,6 @@ const cookie = require("cookie-parser");
 const socketio = require("socket.io");
 const session = require("express-session");
 const { sequelize, User, Post, Reply, Complaint } = require("./model");
-const { makePaginate } = require("sequelize-cursor-pagination");
 const app = express(); // express 설정1
 // 서버 연결-------------------------------------------------
 const server = app.listen(3000, () => {
@@ -50,7 +49,6 @@ sequelize
     // 연결실패
     console.log(err);
   });
-
 
 app.get("/", (req, res) => {
   res.render("loading");
@@ -385,11 +383,9 @@ io.on("connection",(socket)=>{
         console.log(userArr);
         if(userArr.length <= 0 ){
             io.emit("return")
-        } 
-        
-    });
-    console.log("유저 접속");
-    
+          } console.log("유저 접속");
+          })
+     
     socket.on("chat",(name,msg,socket)=>{
         // console.log(original)
         User.findOne({
@@ -528,28 +524,24 @@ app.get("/board/:id", function (req, res) {
         User.findOne({
           raw: true,
           where: {
-            nickname: req.session.nickname,
-          },
-        })
-        .then((e) => {
-          res.render("post", {
-            Post: result,
-            Reply: el,
-            User: e,
+              nickName: name,
+            },
+          }).then((e) => {
+            res.render("post", {
+              Post: result,
+              Reply: el,
+              User: e,
+            });
           });
         })
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  })
-  .catch(()=>{
-    res.redirect('/login')
-  })
+        .catch((err) => {
+          console.log(err);
+        });
+    })
+    .catch(() => {
+      res.redirect("/login");
+    });
 });
-
-// 페이징
-
 
 // 수정하기 페이지
 // 글쓴 사람만 수정할 수 있음
@@ -620,34 +612,31 @@ app.post("/reply/:id", (req, res) => {
       postId: postID,
       content: replyContent,
       writer: name,
-    })
-      .then(() => {
-        Post.findOne({
-          raw: true,
-          where: { postId: postID },
-        })
-          .then((e) => {
-            Reply.findAll({
-              where: {
-                postId: postID,
-              },
-            })
-            .then((a)=>{
-              User.findOne({
-                raw:true,
-                where:{
-                  nickName : req.session.nickname
-                }
-              })
-              .then((popo)=>{
-                res.redirect(`/board/${postID}`);
-              })
-            })
-          })
-          .catch((err) => {
-            console.log(err);
-          });
+    }).then(() => {
+      Post.findOne({
+        raw: true,
+        where: { postId: postID },
       })
+        .then((e) => {
+          Reply.findAll({
+            where: {
+              postId: postID,
+            },
+          }).then((a) => {
+            User.findOne({
+              raw: true,
+              where: {
+                nickName: req.session.nickname,
+              },
+            }).then((popo) => {
+              res.redirect(`/board/${postID}`);
+            });
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    });
   }
 });
 
@@ -674,14 +663,13 @@ app.get("/del_reply/:id/:co", (req, res) => {
           },
         }).then((a) => {
           User.findOne({
-            raw:true,
-            where:{
-              nickName : req.session.nickname
-            }
-          })
-          .then((popo)=>{
+            raw: true,
+            where: {
+              nickName: req.session.nickname,
+            },
+          }).then((popo) => {
             res.render("post", { Post: e, Reply: a, User: popo });
-          })
+          });
         });
       })
       .catch((err) => {

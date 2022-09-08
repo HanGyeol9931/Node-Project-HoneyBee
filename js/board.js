@@ -26,10 +26,18 @@ $.ajax({
 
       tr.addEventListener("click", (e) => {
         const postId = e.target.getAttribute("postId");
+        console.log(postId);
         document.location.href = `/board/${postId}`;
       });
       tbody.appendChild(tr);
     });
     table.appendChild(tbody);
+    console.log(document.querySelectorAll("tr").length )
+    if(document.querySelectorAll("tr").length >= 10){
+        for(let i=10;i <= document.querySelectorAll("tr").length;i++){
+          console.log(i)
+          document.querySelectorAll("tr")[i].style.display = "none"
+        }
+    }
   },
 });
