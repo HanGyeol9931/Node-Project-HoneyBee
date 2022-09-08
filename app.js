@@ -33,7 +33,7 @@ app.use(bodyParser.urlencoded({ extended: false })); // 정제 (미들웨어) 5
 // 필요한 테이블들이 다 생기고 매핑된다. 절대 어긋날 일이 없다.// 테이블 내용이 다르면 오류를 밷어냄 // 여기서 CREATE TABLE 문이 여기서 실행된다는것
 app.use(
   session({
-    secret: process.env.SESSION_KEY,
+    secret: "언뇽",
     resave: false,
     saveUninitialized: true
   })
