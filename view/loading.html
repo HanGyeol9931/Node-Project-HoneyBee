@@ -100,12 +100,14 @@
         .exec(
             async () => {
                 await new Promise((resolve, reject) => {
-                    function move(){ window.location.href = "/login" }
-                    document.addEventListener("keydown", move())                 
-                    document.addEventListener("click", move())                 
-                });
+                    document.addEventListener("click", ()=>{
+                        window.location.href = "/login"              
+                })
+                    document.addEventListener("keydown", ()=>{
+                        window.location.href = "/login"              
+                })
+            })
             })
         .go()
 </script>
-
 </html>
