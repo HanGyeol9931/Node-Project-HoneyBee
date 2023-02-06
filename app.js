@@ -11,7 +11,7 @@ const session = require("express-session");
 const { sequelize, User, Post, Reply, Complaint } = require("./model");
 const app = express(); // express 설정1
 // 서버 연결-------------------------------------------------
-const server = app.listen(3000, () => {
+const server = app.listen(5000, () => {
   console.log("서버가 열렸습니다.");
 });
 // app.js가 있는 위치 __dirname views 폴더까지의 경로가 기본값 렌더링할 파일을 모아둔 폴더
@@ -33,7 +33,7 @@ app.use(bodyParser.urlencoded({ extended: false })); // 정제 (미들웨어) 5
 // 필요한 테이블들이 다 생기고 매핑된다. 절대 어긋날 일이 없다.// 테이블 내용이 다르면 오류를 밷어냄 // 여기서 CREATE TABLE 문이 여기서 실행된다는것
 app.use(
   session({
-    secret: process.env.SESSION_KEY,
+    secret: "9931",
     resave: false,
     saveUninitialized: true
   })
