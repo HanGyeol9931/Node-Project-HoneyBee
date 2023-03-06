@@ -11,7 +11,7 @@ const session = require("express-session");
 const { sequelize, User, Post, Reply, Complaint } = require("./model");
 const app = express(); // express 설정1
 // 서버 연결-------------------------------------------------
-const server = app.listen(5000, () => {
+const server = app.listen(5001, () => {
   console.log("서버가 열렸습니다.");
 });
 // app.js가 있는 위치 __dirname views 폴더까지의 경로가 기본값 렌더링할 파일을 모아둔 폴더
