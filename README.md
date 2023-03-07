@@ -2,7 +2,7 @@
 
 <!-- 프로젝트 배포 주소 : [MaskMan](http://ec2-3-35-48-37.ap-northeast-2.compute.amazonaws.com/) -->
 
-### 개발자 : <a href="https://www.notion.so/38f029f575d64814ace22b130119320d"><img src="https://img.shields.io/badge/notion-000000?style=for-the-badge&logo=notion&logoColor=white"></a> 나 외  2명
+### 개발자 : <a href="https://www.notion.so/38f029f575d64814ace22b130119320d"><img src="https://img.shields.io/badge/notion-000000?style=for-the-badge&logo=notion&logoColor=white"></a> 본인 외  2명
 
 ### 기간 : 2022.08.22 ~ 2022.09.05
 
